@@ -2,8 +2,9 @@ import Menu from "./layout/Menu";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 
-
 function QlList() {
+
+
   return (
     <div className="page-wrapper">
     <Menu></Menu>

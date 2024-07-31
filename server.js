@@ -1,8 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
+const cors = require('cors');
 const app = express();
 const port = 3001;
-
+app.use(cors());
 // Thiết lập kết nối MySQL
 const db = mysql.createConnection({
   host: 'localhost',
@@ -13,19 +14,16 @@ const db = mysql.createConnection({
 
 
 
-app.get('/api/data', (req, res) => {
-    const sql = 'SELECT * FROM nhanvien';
-    db.query(sql, (err, results) => {
-      if (err) {
-        return res.send(err);
-      } else {
-        return res.json({
-          data: results
-        });
-      }
-    });
+app.get('/api/units', (req, res) => {
+  const sql = 'SELECT * FROM sanpham';
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    return res.json(results);
   });
-  
+});
+
 
 
 app.listen(port, () => {

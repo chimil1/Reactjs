@@ -1,16 +1,32 @@
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Menu from "./layout/Menu";
-import img from "../asset/images/icon/thun1.webp"
-
-
+import img from "../asset/images/icon/thun1.webp";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUnits } from "../actions/unitActions";
 
 function QlProduct() {
+  const dispatch = useDispatch();
+  const unitState = useSelector(state => state.unit);
+
+  useEffect(() => {
+    dispatch(fetchUnits());
+  }, [dispatch]);
+
+  if (unitState.loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (unitState.error) {
+    return <p>Err: {unitState.error}</p>;
+  }
+
   return (
     <div className="page-wrapper">
-      <Menu></Menu>
+      <Menu />
       <div className="page-container">
-        <Header></Header>
+        <Header />
         <div className="main-content">
           <div className="section__content section__content--p30">
             <div className="container-fluid">
@@ -39,127 +55,34 @@ function QlProduct() {
                               <th>Hình ảnh</th>
                               <th>Giá</th>
                               <th>Giá khuyến mãi</th>
-                              <th>Mô tả</th>
+                              <th>Trạng thái</th>
                               <th></th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td>1</td>
-                              <td>Áo thun nam unisex</td>
-                              <td><img src={`${img}`} alt="" style={{width:'150px',height:'100px'}} /></td>
-                              <td>10.000.000đ</td>
-                              <td className="process">400.000đ</td>
-                              <td>
-                                Áo thun vải coton gắn kết cặp đôi nè trời ơi.
-                              </td>
-                              <td>
-                                <div className="table-data-feature">
-                                  <button
-                                    className="item"
-                                    data-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Send"
-                                  >
-                                    <i className="zmdi zmdi-mail-send"></i>
-                                  </button>
-                                  <button
-                                    className="item"
-                                    data-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Edit"
-                                  >
-                                    <i className="zmdi zmdi-edit"></i>
-                                  </button>
-                                  <button
-                                    className="item"
-                                    data-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Delete"
-                                  >
-                                    <i className="zmdi zmdi-delete"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-
-                            <tr>
-                            <td>2</td>
-                            <td>Áo thun nam unisex</td>
-                            <td><img src={`${img}`} alt="" style={{width:'150px',height:'100px'}} /></td>
-                            <td>10.000.000đ</td>
-                            <td className="process">400.000đ</td>
-                            <td>
-                              Áo thun vải coton gắn kết cặp đôi nè trời ơi.
-                            </td>
-                            <td>
-                              <div className="table-data-feature">
-                                <button
-                                  className="item"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Send"
-                                >
-                                  <i className="zmdi zmdi-mail-send"></i>
-                                </button>
-                                <button
-                                  className="item"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Edit"
-                                >
-                                  <i className="zmdi zmdi-edit"></i>
-                                </button>
-                                <button
-                                  className="item"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Delete"
-                                >
-                                  <i className="zmdi zmdi-delete"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr>
-                          <td>3</td>
-                          <td>Áo thun nam unisex</td>
-                          <td><img src={`${img}`} alt="" style={{width:'150px',height:'100px'}} /></td>
-                          <td>10.000.000đ</td>
-                          <td className="process">400.000đ</td>
-                          <td>
-                            Áo thun vải coton gắn kết cặp đôi nè trời ơi.
-                          </td>
-                          <td>
-                            <div className="table-data-feature">
-                              <button
-                                className="item"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Send"
-                              >
-                                <i className="zmdi zmdi-mail-send"></i>
-                              </button>
-                              <button
-                                className="item"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Edit"
-                              >
-                                <i className="zmdi zmdi-edit"></i>
-                              </button>
-                              <button
-                                className="item"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Delete"
-                              >
-                                <i className="zmdi zmdi-delete"></i>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
+                          {unitState.units.map((item,index) => (
+                              <tr key={item.MaSanPham}>
+                                <td>{index+1}</td>
+                                <td>{item.TenSanPham}</td>
+                                <td><img src={img} alt="" style={{ width: '100px', height: '50px' }} /></td>
+                                <td>{item.Gia}</td>
+                                <td>{item.GiaKhuyenMai}</td>
+                                <td className="process">{item.TrangThai}</td>
+                                <td>
+                                  <div className="table-data-feature">
+                                    <button className="item" data-toggle="tooltip" data-placement="top" title="Send">
+                                      <i className="zmdi zmdi-mail-send"></i>
+                                    </button>
+                                    <button className="item" data-toggle="tooltip" data-placement="top" title="Edit">
+                                      <i className="zmdi zmdi-edit"></i>
+                                    </button>
+                                    <button className="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                      <i className="zmdi zmdi-delete"></i>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </div>
@@ -167,7 +90,7 @@ function QlProduct() {
                   </div>
                 </div>
               </div>
-              <Footer></Footer>
+              <Footer />
             </div>
           </div>
         </div>
