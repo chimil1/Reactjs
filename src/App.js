@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Dashboard from "./admin/Dash";
+import { Link, Routes, Route, BrowserRouter } from "react-router-dom";
+import AddPersonnel from "./admin/AddPersonnel";
+import AddList from "./admin/AddList";
+import AddProduct from "./admin/AddProduct";
+import QlPersonnel from "./admin/QlPersonnel";
+import QlProduct from "./admin/QlProduct";
+import QlList from "./admin/QlList";
+
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter basename="/">
+        <Routes>
+          <Route path="/" exact element={<Dashboard />} />
+         <Route path="/qllist" element={<QlList/>}/>
+          <Route path="/qlpersonnel" element={<QlPersonnel />} />
+          <Route path="/qlproduct" element={<QlProduct />} />
+
+          <Route path="/addlist" element={<AddList />} />
+          <Route path="/addproduct" element={<AddProduct />} />
+          <Route path="/addpersonnel" element={<AddPersonnel />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
