@@ -14,7 +14,7 @@ const db = mysql.createConnection({
 
 
 app.get('/api/data', (req, res) => {
-    const sql = 'SELECT * FROM sanpham';
+    const sql = 'SELECT * FROM nhanvien';
     db.query(sql, (err, results) => {
       if (err) {
         return res.send(err);
