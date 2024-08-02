@@ -4,7 +4,7 @@ import Menu from "./layout/Menu";
 import img from "../asset/images/icon/thun1.webp";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUnits } from "../actions/unitActions";
+import { fetchUnits,fetchDelete} from "../actions/unitActions";
 
 function QlProduct() {
   const dispatch = useDispatch();
@@ -13,6 +13,11 @@ function QlProduct() {
   useEffect(() => {
     dispatch(fetchUnits());
   }, [dispatch]);
+
+  const handleDelete = (MaSanPham) => {
+    dispatch(fetchDelete(MaSanPham));
+    alert('Xóa sản phẩm thành công!')
+  };
 
   if (unitState.loading) {
     return <p>Loading...</p>;
@@ -76,7 +81,7 @@ function QlProduct() {
                                     <button className="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                       <i className="zmdi zmdi-edit"></i>
                                     </button>
-                                    <button className="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                    <button onClick={() => handleDelete(item.MaSanPham)} className="item" data-toggle="tooltip" data-placement="top" title="Delete">
                                       <i className="zmdi zmdi-delete"></i>
                                     </button>
                                   </div>
