@@ -63,7 +63,7 @@ export const fetchAddUnit = (unit) => {
     axios
       .post("http://localhost:3001/api/units", unit)
       .then(() => {
-        dispatch(fetchUnits()); // Tải lại danh sách sau khi thêm thành công
+        dispatch(fetchUnits());
       })
       .catch((error) => {
         const errorMsg = error.message;

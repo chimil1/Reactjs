@@ -60,7 +60,7 @@ function QlProduct() {
                               <th>Hình ảnh</th>
                               <th>Giá</th>
                               <th>Giá khuyến mãi</th>
-                              <th>Trạng thái</th>
+                              <th>Số lượng</th>
                               <th></th>
                             </tr>
                           </thead>
@@ -69,10 +69,10 @@ function QlProduct() {
                               <tr key={item.MaSanPham}>
                                 <td>{index+1}</td>
                                 <td>{item.TenSanPham}</td>
-                                <td><img src={img} alt="" style={{ width: '100px', height: '50px' }} /></td>
+                                <td><img src={img} alt="" style={{ width: '100px', height: '100px' }} /></td>
                                 <td>{item.Gia}</td>
                                 <td>{item.GiaKhuyenMai}</td>
-                                <td className="process">{item.TrangThai}</td>
+                                <td className="process">{item.SoLuong}</td>
                                 <td>
                                   <div className="table-data-feature">
                                     <button className="item" data-toggle="tooltip" data-placement="top" title="Send">

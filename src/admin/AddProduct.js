@@ -3,10 +3,12 @@ import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import { fetchAddUnit } from '../actions/unitActions';
 
 function AddProduct() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [product, setProduct] = useState({
     TenSanPham: '',
     Gia: '',
@@ -25,9 +27,11 @@ function AddProduct() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const  handleSubmit = (e) => {
     e.preventDefault();
     dispatch(fetchAddUnit(product));
+    alert("Thêm sản phẩm thành công!");
+    navigate("/qlproduct");
   };
 
   return (
@@ -62,8 +66,6 @@ function AddProduct() {
                               placeholder="Nhập tên sản phẩm..."
                               className="form-control"
                               />
-                            
-                        
                           </div>
                         </div>
                         <div className="row form-group">
