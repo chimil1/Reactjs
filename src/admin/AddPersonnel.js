@@ -1,13 +1,44 @@
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Menu from "./layout/Menu";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { fetchAddEmployee } from "../actions/unitActions";
 
 function AddPersonnel() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [personnel, setPersonnel] = useState({
+    Email: '',
+    MatKhau:'',
+    HoTen: '',
+    DiaChi: '',
+    SDT:'',
+    Admin: '',
+    ChucVu: '',
+    LyLich: '',
+  });
+
+  const handleChange = (e) => {
+    setPersonnel({
+      ...personnel,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(fetchAddEmployee(personnel));
+    alert("Thêm nhân viên thành công!");
+    navigate('/qlpersonnel');
+  };
+
   return (
     <div className="page-wrapper">
-      <Menu></Menu>
+      <Menu />
       <div className="page-container">
-        <Header></Header>
+        <Header />
         <div className="main-content">
           <div className="section__content section__content--p30">
             <div className="container-fluid">
@@ -18,111 +49,92 @@ function AddPersonnel() {
                       <strong>Form</strong> thêm nhân viên
                     </div>
                     <div className="card-body card-block">
-                      <form
-                        action=""
-                        method="post"
-                        enctype="multipart/form-data"
-                        className="form-horizontal"
-                      >
-                        <div className="row form-group">
-                        </div>
+                      <form onSubmit={handleSubmit} className="form-horizontal">
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label for="text-input" className=" form-control-label">
+                            <label htmlFor="HoTen" className="form-control-label">
                               Tên nhân viên
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
                               type="text"
-                              id="text-input"
-                              name="text-input"
+                              id="HoTen"
+                              name="HoTen"
+                              value={personnel.HoTen}
+                              onChange={handleChange}
                               placeholder="Nhập tên..."
                               className="form-control"
                             />
-                            <small className="form-text text-muted">
-                              This is a help text
-                            </small>
                           </div>
                         </div>
-
-
-
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label  for="email-input" className=" form-control-label">
+                            <label htmlFor="Email" className="form-control-label">
                               Email 
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
                               type="email"
-                              id="email-input"
-                              name="email-input"
+                              id="Email"
+                              name="Email"
+                              value={personnel.Email}
+                              onChange={handleChange}
                               placeholder="Nhập email..."
                               className="form-control"
                             />
-                            <small className="help-block form-text">
-                              Please enter your email
-                            </small>
                           </div>
                         </div>
-
-
-
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label  for="password-input" className=" form-control-label">
+                            <label htmlFor="SDT" className="form-control-label">
                               SDT
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
                               type="text"
-                              id="password-input"
-                              name="password-input"
-                              placeholder="Nhận sdt..."
+                              id="SDT"
+                              name="SDT"
+                              value={personnel.SDT}
+                              onChange={handleChange}
+                              placeholder="Nhập SDT..."
                               className="form-control"
                             />
-                            <small className="help-block form-text">
-                              Please enter a complex password
-                            </small>
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label
-                              for="disabled-input"
-                              className=" form-control-label"
-                            >
+                            <label htmlFor="DiaChi" className="form-control-label">
                               Địa chỉ
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
                               type="text"
-                              id="disabled-input"
-                              name="disabled-input"
+                              id="DiaChi"
+                              name="DiaChi"
+                              value={personnel.DiaChi}
+                              onChange={handleChange}
                               placeholder="Địa chỉ..."
-                              disabled=""
                               className="form-control"
                             />
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label
-                              for="textarea-input"
-                              className=" form-control-label"
-                            >
+                            <label htmlFor="LyLich" className="form-control-label">
                               Lý lịch
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <textarea
-                              name="textarea-input"
-                              id="textarea-input"
+                              name="LyLich"
+                              id="LyLich"
                               rows="9"
+                              value={personnel.LyLich}
+                              onChange={handleChange}
                               placeholder="Lý lịch..."
                               className="form-control"
                             ></textarea>
@@ -130,32 +142,26 @@ function AddPersonnel() {
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label
-                              for="disabledSelect"
-                              className=" form-control-label"
-                            >
+                            <label htmlFor="ChucVu" className="form-control-label">
                              Chức vụ
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <select
-                              name="disabledSelect"
-                              id="disabledSelect"
-                              disabled=""
+                              name="ChucVu"
+                              id="ChucVu"
+                              value={personnel.ChucVu}
+                              onChange={handleChange}
                               className="form-control"
                             >
                               <option value="0">Nhân viên</option>
                               <option value="1">Quản lí</option>
-                           
                             </select>
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label
-                              for="file-input"
-                              className=" form-control-label"
-                            >
+                            <label htmlFor="file-input" className="form-control-label">
                               Hình ảnh
                             </label>
                           </div>
@@ -168,17 +174,17 @@ function AddPersonnel() {
                             />
                           </div>
                         </div>
+                        <div className="card-footer">
+                          <button type="submit" className="btn btn-primary btn-sm">
+                            <i className="fa fa-dot-circle-o"></i> Submit
+                          </button>
+                        </div>
                       </form>
-                    </div>
-                    <div className="card-footer">
-                      <button type="submit" className="btn btn-primary btn-sm">
-                        <i className="fa fa-dot-circle-o"></i> Submit
-                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <Footer></Footer>
+              <Footer />
             </div>
           </div>
         </div>

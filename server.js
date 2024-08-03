@@ -75,6 +75,67 @@ app.post("/api/units", (req, res) => {
   );
 });
 
+//nhân viên
+// hiển thị nhân viên
+app.get("/api/employees", (req, res) => {
+  const sql = "SELECT * FROM nhanvien";
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    return res.json(results);
+  });
+});
+//xóa nhân viên
+app.delete("/api/employees/:MaNhanVien", (req, res) => {
+  const MaNhanVien = req.params.MaNhanVien;
+  const sql = "DELETE FROM nhanvien WHERE MaNhanVien = ?";
+  db.query(sql, [MaNhanVien], (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    return res.json({ message: "Deleted successfully" });
+  });
+});
+//thêm nhân viên
+app.post("/api/employees", (req, res) => {
+  const {
+    Email,
+    MatKhau,
+    HoTen,
+    DiaChi,
+    SDT,
+    Admin,
+    Anh,
+    ChucVu,
+    LyLich
+  } = req.body;
+  const sql =
+    "INSERT INTO nhanvien (Email,MatKhau,HoTen,DiaChi,SDT,Admin,Anh, ChucVu,LyLich) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
+  db.query(
+    sql,
+    [
+      Email,
+      MatKhau,
+      HoTen,
+      DiaChi,
+      SDT,
+      Admin,
+      Anh,
+      ChucVu,
+      LyLich
+    ],
+    (err, result) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      return res
+        .status(201)
+        .json({ message: "Thêm Nhân Viên thành công!", data: result });
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

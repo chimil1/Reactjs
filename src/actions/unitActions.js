@@ -71,6 +71,56 @@ export const fetchAddUnit = (unit) => {
       });
   };
 };
+// Nhân Viên
+export const fetchEmployee = () => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .get("http://localhost:3001/api/employees")
+      .then((response) => {
+        const units = response.data;
+        dispatch(fetchUnitsSuccess(units));
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
+//xóa
+export const fetchDelete1 = (MaNhanVien) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .delete(`http://localhost:3001/api/employees/${MaNhanVien}`)
+      .then((response) => {
+        const units = response.data;
+        dispatch(fetchUnitsSuccess(units));
+        dispatch(fetchEmployee());
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
+//thêm
+export const fetchAddEmployee = (employee) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .post("http://localhost:3001/api/employees", employee)
+      .then(() => {
+        dispatch(fetchEmployee());
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
+
+
 
 // export const fetchUpdateUnit = (id, unit) => {
 //   return (dispatch) => {

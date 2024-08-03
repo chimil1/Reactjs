@@ -1,10 +1,29 @@
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Menu from "./layout/Menu";
-import image from "../asset/images/icon/avatar-01.jpg"
-import image1 from "../asset/images/icon/avatar-02.jpg"
-
+import image from "../asset/images/icon/avatar-01.jpg";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchEmployee,fetchDelete1} from "../actions/unitActions";
 function QlPersonnel() {
+  const dispatch = useDispatch();
+  const unitState = useSelector(state => state.unit);
+
+  useEffect(()=>{
+    dispatch(fetchEmployee());
+  }, [dispatch]);
+
+  const handleDelete = (MaNhanVien) =>{
+    dispatch(fetchDelete1(MaNhanVien));
+    alert('Xóa nhân viên thành công!')
+  };
+
+  if (unitState.loading) {
+    return <p>Loading...</p>
+  }
+  if (unitState.error) {
+    return <p>Err: {unitState.error}</p>;
+  }
   return (
       <div className="page-wrapper">
         <Menu></Menu>
@@ -34,27 +53,32 @@ function QlPersonnel() {
                           <table className="table table-data2">
                             <thead>
                               <tr className="tr-shadow">
-                                <th>Tên</th>
+                                <th>STT</th>
+                                <th>Họ Tên</th>
                                 <th>Email</th>
                                 <th>Hình ảnh</th>
                                 <th>SDT</th>
-                                <th>Chức vụ</th>
+                                <th>Mật Khẩu</th>
+                                <th>Chức Vụ</th>
                                 <th></th>
                               </tr>
                             </thead>
+                            
                             <tbody>
-                              <tr className="tr-shadow">
-                                <td>Lori Lynch</td>
+                            {unitState.units.map((item,index)=>(
+                              <tr className="tr-shadow" key={item.MaNhanVien}>
+                                <td>{index+1}</td>
+                                <td>{item.HoTen}</td>
                                 <td>
                                   <span className="block-email">
-                                    lori@example.com
+                                    {item.Email}
                                   </span>
                                 </td>
                                 <td> <img src={`${image}`} alt="" /></td>
-                                <td>2018-09-27 02:12</td>
+                                <td>{item.SDT}</td>
                                 <td>
                                   <span className="status--process">
-                                    Nhân viên
+                                    {item.ChucVu}
                                   </span>
                                 </td>
                                 <td>
@@ -75,7 +99,7 @@ function QlPersonnel() {
                                     >
                                       <i className="zmdi zmdi-edit"></i>
                                     </button>
-                                    <button
+                                    <button onClick={()=>handleDelete(item.MaNhanVien)}
                                       className="item"
                                       data-toggle="tooltip"
                                       data-placement="top"
@@ -86,50 +110,7 @@ function QlPersonnel() {
                                   </div>
                                 </td>
                               </tr>
-                              <tr className="spacer"></tr>
-                              <tr className="tr-shadow">
-                                <td>Lori Lynch</td>
-                                <td>
-                                  <span className="block-email">
-                                    john@example.com
-                                  </span>
-                                </td>
-                                <td><img src={`${image1}`} alt="" /></td>
-                                <td>2018-09-29 05:57</td>
-                                <td>
-                                  <span className="status--process">
-                                    Nhân viên
-                                  </span>
-                                </td>
-                                <td>
-                                  <div className="table-data-feature">
-                                    <button
-                                      className="item"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="Send"
-                                    >
-                                      <i className="zmdi zmdi-mail-send"></i>
-                                    </button>
-                                    <button
-                                      className="item"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="Edit"
-                                    >
-                                      <i className="zmdi zmdi-edit"></i>
-                                    </button>
-                                    <button
-                                      className="item"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="Delete"
-                                    >
-                                      <i className="zmdi zmdi-delete"></i>
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
+                              ))}
                             </tbody>
                           </table>
                         </div>
