@@ -65,7 +65,7 @@ function QlProduct() {
                             </tr>
                           </thead>
                           <tbody>
-                          {unitState.units.map((item,index) => (
+                          {Array.isArray(unitState.units) && unitState.units.map((item,index) => (
                               <tr key={item.MaSanPham}>
                                 <td>{index+1}</td>
                                 <td>{item.TenSanPham}</td>

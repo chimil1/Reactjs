@@ -38,42 +38,60 @@ app.delete("/api/units/:MaSanPham", (req, res) => {
 });
 
 app.post("/api/units", (req, res) => {
-  const {
-    TenSanPham,
-    Gia,
-    GiaKhuyenMai,
-    SoLuong,
-    MoTa,
-    MaDanhMuc,
-    HinhAnh,
-    TrangThai,
-    Hot
-  } = req.body;
-  const sql =
-    "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai,SoLuong, MoTa, MaDanhMuc,HinhAnh, TrangThai,Hot) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
-  db.query(
-    sql,
-    [
-      TenSanPham,
-      Gia,
-      GiaKhuyenMai,
-      SoLuong,
-      MoTa,
-      MaDanhMuc,
-      HinhAnh,
-      TrangThai,
-      Hot
-    ],
-    (err, result) => {
-      if (err) {
-        return res.status(500).send(err);
-      }
-      return res
-        .status(201)
-        .json({ message: "Thêm sản phẩm thành công!", data: result });
+  const { TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong } = req.body;
+  
+  console.log('Received data:', req.body);
+
+  const sql = "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  
+  db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
     }
-  );
+    return res.status(201).json({ message: "Thêm sản phẩm thành công!", data: result });
+  });
 });
+
+
+// app.post("/api/units", (req, res) => {
+
+//   const {
+//     TenSanPham,
+//     Gia,
+//     GiaKhuyenMai,
+//     SoLuong,
+//     MoTa,
+//     MaDanhMuc,
+//     HinhAnh,
+//     TrangThai,
+//     Hot
+//   } = req.body;
+//   const sql =
+//     "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai,SoLuong, MoTa, MaDanhMuc,HinhAnh, TrangThai,Hot) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
+//   db.query(
+//     sql,
+//     [
+//       TenSanPham,
+//       Gia,
+//       GiaKhuyenMai,
+//       SoLuong,
+//       MoTa,
+//       MaDanhMuc,
+//       HinhAnh,
+//       TrangThai,
+//       Hot
+//     ],
+//     (err, result) => {
+//       if (err) {
+//         return res.status(500).send(err);
+//       }
+//       return res
+//         .status(201)
+//         .json({ message: "Thêm sản phẩm thành công!", data: result });
+//     }
+//   );
+// });
 
 //nhân viên
 // hiển thị nhân viên

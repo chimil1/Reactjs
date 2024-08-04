@@ -57,15 +57,28 @@ export const fetchDelete = (MaSanPham) => {
   };
 };
 
+// export const fetchAddUnit = (unit) => {
+//   return (dispatch) => {
+//     dispatch(fetchUnitsRequest());
+//     axios
+//       .post("http://localhost:3001/api/units", unit)
+//       .then(() => {
+//         dispatch(fetchUnits());
+//       })
+//       .catch((error) => {
+//         const errorMsg = error.message;
+//         dispatch(fetchUnitsFailure(errorMsg));
+//       });
+//   };
+// };
 export const fetchAddUnit = (unit) => {
   return (dispatch) => {
     dispatch(fetchUnitsRequest());
-    axios
-      .post("http://localhost:3001/api/units", unit)
-      .then(() => {
-        dispatch(fetchUnits());
+    axios.post("http://localhost:3001/api/units", unit)
+      .then(response => {
+        dispatch(fetchUnitsSuccess(response.data));
       })
-      .catch((error) => {
+      .catch(error => {
         const errorMsg = error.message;
         dispatch(fetchUnitsFailure(errorMsg));
       });

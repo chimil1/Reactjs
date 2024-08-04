@@ -1,35 +1,33 @@
 import Menu from "./layout/Menu";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchAddUnit } from '../actions/unitActions';
+import { fetchAddUnit } from "../actions/unitActions";
+import { useForm } from "react-hook-form";
 
 function AddProduct() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [product, setProduct] = useState({
-    TenSanPham: '',
-    Gia: '',
-    GiaKhuyenMai: '',
-    MoTa: '',
-    TrangThai: '',
-    MaDanhMuc: '',
-    SoLuong: '' 
-  });
+  const unitState = useSelector((state) => state.unit);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
+  if (unitState.loading) {
+    return <p>Loading...</p>;
+  }
 
-  const handleChange = (e) => {
-    setProduct({
-      ...product,
-      [e.target.name]: e.target.value,
-    });
-  };
+  if (unitState.error) {
+    return <p>Error: {unitState.error}</p>;
+  }
 
-  const  handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(fetchAddUnit(product));
+  const submit = (data) => {
+    dispatch(fetchAddUnit(data));
+    console.log(data);
     alert("Thêm sản phẩm thành công!");
     navigate("/qlproduct");
   };
@@ -49,56 +47,69 @@ function AddProduct() {
                       <strong>Form</strong> thêm sản phẩm
                     </div>
                     <div className="card-body card-block">
-                      <form onSubmit={handleSubmit}>
+                      <form onSubmit={handleSubmit(submit)}>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="text-input" className="form-control-label">
+                            <label
+                              htmlFor="TenSanPham"
+                              className="form-control-label"
+                            >
                               Tên sản phẩm
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                              {...register("TenSanPham", { required: true })}
                               type="text"
                               id="TenSanPham"
                               name="TenSanPham"
-                              value={product.TenSanPham}
-                              onChange={handleChange}
                               placeholder="Nhập tên sản phẩm..."
                               className="form-control"
-                              />
+                            />
+                            {errors.TenSanPham && (
+                              <span className="text-danger">
+                                Tên sản phẩm không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="text-input" className="form-control-label">
+                            <label htmlFor="Gia" className="form-control-label">
                               Giá
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                              {...register("Gia", { required: true })}
                               type="number"
                               id="Gia"
                               name="Gia"
-                              value={product.Gia}
-                              onChange={handleChange}
                               placeholder="Nhập giá sản phẩm..."
                               className="form-control"
                             />
+                            {errors.Gia && (
+                              <span className="text-danger">
+                              Giá sản phẩm không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="text-input" className="form-control-label">
+                            <label
+                              htmlFor="GiaKhuyenMai"
+                              className="form-control-label"
+                            >
                               Giá khuyến mãi
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                              {...register("GiaKhuyenMai")}
                               type="number"
                               id="GiaKhuyenMai"
                               name="GiaKhuyenMai"
-                              value={product.GiaKhuyenMai}
-                              onChange={handleChange}
                               placeholder="Nhập giá khuyến mãi sản phẩm..."
                               className="form-control"
                             />
@@ -106,78 +117,137 @@ function AddProduct() {
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="text-input" className="form-control-label">
+                            <label
+                              htmlFor="SoLuong"
+                              className="form-control-label"
+                            >
                               Số lượng
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                              {...register("SoLuong", { required: true })}
                               type="number"
                               id="SoLuong"
                               name="SoLuong"
-                              value={product.SoLuong}
-                              onChange={handleChange}
                               placeholder="Nhập số lượng..."
                               className="form-control"
                             />
+                            {errors.SoLuong && (
+                              <span className="text-danger">
+                              Số lượng sản phẩm không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="textarea-input" className="form-control-label">
+                            <label
+                              htmlFor="MoTa"
+                              className="form-control-label"
+                            >
                               Mô tả
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <textarea
+                              {...register("MoTa", { required: true })}
                               name="MoTa"
                               id="MoTa"
-                              value={product.MoTa}
-                              onChange={handleChange}
                               rows="9"
                               placeholder="Nhập mô tả..."
                               className="form-control"
                             ></textarea>
+                            {errors.MoTa && (
+                              <span className="text-danger">
+                            Mô tả sản phẩm không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="disabledSelect" className="form-control-label">
+                            <label
+                              htmlFor="MaDanhMuc"
+                              className="form-control-label"
+                            >
                               Danh mục
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <select
+                              {...register("MaDanhMuc", { required: true })}
                               name="MaDanhMuc"
                               id="MaDanhMuc"
-                              value={product.MaDanhMuc}
-                              onChange={handleChange}
                               className="form-control"
                             >
-                              <option value="">Chọn danh mục</option> {/* Giá trị mặc định trống */}
+                              <option value="">Chọn danh mục</option>
                               <option value="1">Áo thun</option>
                               <option value="2">Áo khoác</option>
                               <option value="3">Quần jean</option>
                             </select>
+                            {errors.MaDanhMuc && (
+                              <span className="text-danger">
+                              Danh mục sản phẩm không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="file-input" className="form-control-label">
+                            <label
+                              htmlFor="file-input"
+                              className="form-control-label"
+                            >
                               Hình ảnh
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                              {...register("HinhAnh")}
                               type="file"
                               id="file-input"
-                              name="file-input"
+                              name="HinhAnh"
                               className="form-control-file"
                             />
                           </div>
                         </div>
+                        <div className="row form-group">
+                          <div className="col col-md-3">
+                            <label
+                              htmlFor="TrangThai"
+                              className="form-control-label"
+                            >
+                              Trạng thái
+                            </label>
+                          </div>
+                          <div className="col-12 col-md-9">
+                            <select
+                              {...register("TrangThai", { required: true })}
+                              name="TrangThai"
+                              id="TrangThai"
+                              className="form-control"
+                            >
+                              <option value="">Chọn danh mục</option>
+                              <option value="Đang hoạt động">
+                                Đang hoạt động
+                              </option>
+                              <option value="Không hoạt động">
+                                Không hoạt động
+                              </option>
+                            </select>
+                            {errors.TrangThai && (
+                              <span className="text-danger">
+                              Trạng thái sản phẩm không được bỏ trống!
+                              </span>
+                            )}
+                          </div>
+                        </div>
                         <div className="card-footer">
-                          <button type="submit" className="btn btn-primary btn-sm">
+                          <button
+                            type="submit"
+                            className="btn btn-primary btn-sm"
+                          >
                             <i className="fa fa-dot-circle-o"></i> Submit
                           </button>
                         </div>

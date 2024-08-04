@@ -178,6 +178,7 @@ function AddPersonnel() {
                               onChange={handleChange}
                               className="form-control"
                             >
+                            <option>Danh mục</option>
                               <option value="Nhân viên">Nhân viên</option>
                               <option value="Quản lí">Quản lí</option>
                             </select>
