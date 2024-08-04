@@ -1,10 +1,10 @@
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Menu from "./layout/Menu";
+import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { fetchAddEmployee } from "../actions/unitActions";
+import { fetchAdd } from "../actions/unitActions";
 
 function AddPersonnel() {
   const dispatch = useDispatch();
@@ -12,12 +12,13 @@ function AddPersonnel() {
   const [personnel, setPersonnel] = useState({
     HoTen: '',
     Email: '',
-    SDT:'',
-    MatKhau:'',
+    MatKhau: '',
+    SDT: '',
     DiaChi: '',
-    Admin: '',
-    ChucVu: '',
     LyLich: '',
+    ChucVu: '',
+    Anh: '',
+    Admin: '1',
   });
 
   const handleChange = (e) => {
@@ -27,11 +28,16 @@ function AddPersonnel() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(fetchAddEmployee(personnel));
-    alert("Thêm nhân viên thành công!");
-    navigate('/qlpersonnel');
+    try {
+      await dispatch(fetchAdd(personnel));
+      alert("Thêm nhân viên thành công!");
+      navigate('/qlpersonnel');
+    } catch (error) {
+      alert("Có lỗi xảy ra khi thêm nhân viên.");
+      console.error("Error adding personnel:", error.message);
+    }
   };
 
   return (
@@ -71,7 +77,7 @@ function AddPersonnel() {
                         <div className="row form-group">
                           <div className="col col-md-3">
                             <label htmlFor="Email" className="form-control-label">
-                              Email 
+                              Email
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
@@ -88,8 +94,8 @@ function AddPersonnel() {
                         </div>
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label htmlFor="Email" className="form-control-label">
-                              Mật Khẩu 
+                            <label htmlFor="MatKhau" className="form-control-label">
+                              Mật Khẩu
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
@@ -161,7 +167,7 @@ function AddPersonnel() {
                         <div className="row form-group">
                           <div className="col col-md-3">
                             <label htmlFor="ChucVu" className="form-control-label">
-                             Chức vụ
+                              Chức vụ
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
@@ -172,8 +178,8 @@ function AddPersonnel() {
                               onChange={handleChange}
                               className="form-control"
                             >
-                              <option value="0">Nhân viên</option>
-                              <option value="1">Quản lí</option>
+                              <option value="Nhân viên">Nhân viên</option>
+                              <option value="Quản lí">Quản lí</option>
                             </select>
                           </div>
                         </div>

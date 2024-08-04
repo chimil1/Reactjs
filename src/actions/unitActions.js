@@ -105,20 +105,22 @@ export const fetchDelete1 = (MaNhanVien) => {
   };
 };
 //thêm
-export const fetchAddEmployee = (employee) => {
-  return (dispatch) => {
+
+export const fetchAdd = (unit) => {
+  return async (dispatch) => {
     dispatch(fetchUnitsRequest());
-    axios
-      .post("http://localhost:3001/api/employees", employee)
-      .then(() => {
-        dispatch(fetchEmployee());
-      })
-      .catch((error) => {
-        const errorMsg = error.message;
-        dispatch(fetchUnitsFailure(errorMsg));
-      });
+    try {
+      const response = await axios.post('http://localhost:3001/api/employees', unit);
+      dispatch(fetchEmployee());
+      return response.data;
+    } catch (error) {
+      const errorMsg = error.message;
+      dispatch(fetchUnitsFailure(errorMsg));
+      throw error;
+    }
   };
 };
+
 
 
 
