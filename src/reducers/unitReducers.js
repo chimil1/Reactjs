@@ -5,6 +5,7 @@ import {
 } from '../actions/unitActions';
 
 const initialState = {
+    selectedUnit: null, 
     loading: false,
     units: [],
     error: ''
@@ -22,12 +23,14 @@ const unitReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 units: action.payload,
+                selectedUnit: action.payload,
                 error: ''
             };
         case FETCH_UNITS_FAILURE:
             return {
                 ...state,
                 loading: false,
+                selectedUnit: null,
                 units: [],
                 error: action.payload
             };

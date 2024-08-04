@@ -57,6 +57,41 @@ export const fetchDelete = (MaSanPham) => {
   };
 };
 
+export const fetchUnitDetails = (MaSanPham) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .get(`http://localhost:3001/api/units/${MaSanPham}`)
+      .then((response) => {
+        const unit = response.data;
+        dispatch(fetchUnitsSuccess(unit));
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
+
+
+
+
+
+export const updateProduct = (MaSanPham, data) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .put(`http://localhost:3001/api/units/${MaSanPham}`, data)
+      .then((response) => {
+        const unit = response.data;
+        dispatch(fetchUnitsSuccess(unit));
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
 // export const fetchAddUnit = (unit) => {
 //   return (dispatch) => {
 //     dispatch(fetchUnitsRequest());

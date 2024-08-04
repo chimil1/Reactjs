@@ -5,6 +5,7 @@ import img from "../asset/images/icon/thun1.webp";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUnits,fetchDelete} from "../actions/unitActions";
+import { Link } from "react-router-dom";
 
 function QlProduct() {
   const dispatch = useDispatch();
@@ -78,9 +79,11 @@ function QlProduct() {
                                     <button className="item" data-toggle="tooltip" data-placement="top" title="Send">
                                       <i className="zmdi zmdi-mail-send"></i>
                                     </button>
+                                    <Link to={`/editproduct/${item.MaSanPham}`}>
                                     <button className="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                       <i className="zmdi zmdi-edit"></i>
                                     </button>
+                                    </Link>{' '}
                                     <button onClick={() => handleDelete(item.MaSanPham)} className="item" data-toggle="tooltip" data-placement="top" title="Delete">
                                       <i className="zmdi zmdi-delete"></i>
                                     </button>
