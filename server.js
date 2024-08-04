@@ -111,7 +111,7 @@ app.post("/api/employees", (req, res) => {
     LyLich
   } = req.body;
   const sql =
-    "INSERT INTO nhanvien (Email,MatKhau,HoTen,DiaChi,SDT,Admin,Anh, ChucVu,LyLich) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
+    "INSERT INTO nhanvien (Email,MatKhau,HoTen,DiaChi,SDT,Admin,Anh,ChucVu,LyLich) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
   db.query(
     sql,
     [

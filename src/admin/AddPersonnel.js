@@ -10,11 +10,11 @@ function AddPersonnel() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [personnel, setPersonnel] = useState({
-    Email: '',
-    MatKhau:'',
     HoTen: '',
-    DiaChi: '',
+    Email: '',
     SDT:'',
+    MatKhau:'',
+    DiaChi: '',
     Admin: '',
     ChucVu: '',
     LyLich: '',
@@ -82,6 +82,24 @@ function AddPersonnel() {
                               value={personnel.Email}
                               onChange={handleChange}
                               placeholder="Nhập email..."
+                              className="form-control"
+                            />
+                          </div>
+                        </div>
+                        <div className="row form-group">
+                          <div className="col col-md-3">
+                            <label htmlFor="Email" className="form-control-label">
+                              Mật Khẩu 
+                            </label>
+                          </div>
+                          <div className="col-12 col-md-9">
+                            <input
+                              type="password"
+                              id="MatKhau"
+                              name="MatKhau"
+                              value={personnel.MatKhau}
+                              onChange={handleChange}
+                              placeholder="Nhập Mật Khẩu..."
                               className="form-control"
                             />
                           </div>
