@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchUnitDetails,updateProduct } from "../actions/unitActions"; // Cập nhật action
 import { useForm } from "react-hook-form";
-
+import Swal from 'sweetalert2';
 function EditProduct() {
     let { MaSanPham } = useParams();
     const dispatch = useDispatch();
@@ -47,8 +47,15 @@ function EditProduct() {
     const submit = (data) => {
         dispatch(updateProduct(MaSanPham, data)); // Sử dụng action cập nhật sản phẩm
         console.log(data);
-        alert("Cập nhật sản phẩm thành công!");
-        navigate("/qlproduct");
+        Swal.fire({
+            title: "Sửa sản phẩm thành công!",
+            icon: "success",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/qlproduct");
+            }
+          });
+
     };
 
     return (

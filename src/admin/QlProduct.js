@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUnits,fetchDelete} from "../actions/unitActions";
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function QlProduct() {
   const dispatch = useDispatch();
@@ -16,9 +17,32 @@ function QlProduct() {
   }, [dispatch]);
 
   const handleDelete = (MaSanPham) => {
-    dispatch(fetchDelete(MaSanPham));
-    alert('Xóa sản phẩm thành công!')
+
+    Swal.fire({
+      text: "Bạn có muốn xóa sản phẩm này!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Tiếp tục"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          text: "Xóa sản phẩm thành công",
+          icon: "success"
+        });
+        dispatch(fetchDelete(MaSanPham));
+      }
+      
+    });
+
+
+   
+
   };
+
+
+
 
   if (unitState.loading) {
     return <p>Loading...</p>;

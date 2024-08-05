@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchAddUnit } from "../actions/unitActions";
 import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2';
 
 function AddProduct() {
   const dispatch = useDispatch();
@@ -28,8 +29,18 @@ function AddProduct() {
   const submit = (data) => {
     dispatch(fetchAddUnit(data));
     console.log(data);
-    alert("Thêm sản phẩm thành công!");
-    navigate("/qlproduct");
+    dispatch(sweetalert);
+  };
+
+  const sweetalert = () => {
+    Swal.fire({
+      title: "Thêm sản phẩm thành công!",
+      icon: "success",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/qlproduct");
+      }
+    });
   };
 
   return (
@@ -90,7 +101,7 @@ function AddProduct() {
                             />
                             {errors.Gia && (
                               <span className="text-danger">
-                              Giá sản phẩm không được bỏ trống!
+                                Giá sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -135,7 +146,7 @@ function AddProduct() {
                             />
                             {errors.SoLuong && (
                               <span className="text-danger">
-                              Số lượng sản phẩm không được bỏ trống!
+                                Số lượng sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -160,7 +171,7 @@ function AddProduct() {
                             ></textarea>
                             {errors.MoTa && (
                               <span className="text-danger">
-                            Mô tả sản phẩm không được bỏ trống!
+                                Mô tả sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -188,7 +199,7 @@ function AddProduct() {
                             </select>
                             {errors.MaDanhMuc && (
                               <span className="text-danger">
-                              Danh mục sản phẩm không được bỏ trống!
+                                Danh mục sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -238,7 +249,7 @@ function AddProduct() {
                             </select>
                             {errors.TrangThai && (
                               <span className="text-danger">
-                              Trạng thái sản phẩm không được bỏ trống!
+                                Trạng thái sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
