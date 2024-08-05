@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEmployee,fetchDelete1} from "../actions/unitActions";
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
 function QlPersonnel() {
   const dispatch = useDispatch();
   const unitState = useSelector(state => state.unit);
@@ -15,8 +16,22 @@ function QlPersonnel() {
   }, [dispatch]);
 
   const handleDelete = (MaNhanVien) =>{
-    dispatch(fetchDelete1(MaNhanVien));
-    alert('Xóa nhân viên thành công!')
+    Swal.fire({
+      text: "Bạn muốn xóa nhân viên này!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Tiếp tục"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          text: "Xóa thành công!",
+          icon: "success"
+        });
+        dispatch(fetchDelete1(MaNhanVien));
+      }
+    });
   };
 
   if (unitState.loading) {
@@ -66,8 +81,8 @@ function QlPersonnel() {
                             </thead>
                             
                             <tbody>
-                            {unitState.units.map((item,index)=>(
-                              <tr className="tr-shadow" key={item.MaNhanVien}>
+                            {Array.isArray(unitState.units) && unitState.units.map((item,index) => (
+                              <tr key={item.MaNhanVien}>
                                 <td>{index+1}</td>
                                 <td>{item.HoTen}</td>
                                 <td>

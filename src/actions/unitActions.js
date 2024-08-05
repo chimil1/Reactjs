@@ -169,6 +169,7 @@ export const fetchAdd = (unit) => {
   };
 };
 
+
 export const fetchEmployeeDetails = (MaNhanVien) => {
   return (dispatch) => {
     dispatch(fetchUnitsRequest());
@@ -177,6 +178,7 @@ export const fetchEmployeeDetails = (MaNhanVien) => {
       .then((response) => {
         const unit = response.data;
         dispatch(fetchUnitsSuccess(unit));
+        dispatch(fetchEmployee());
       })
       .catch((error) => {
         const errorMsg = error.message;
@@ -184,6 +186,9 @@ export const fetchEmployeeDetails = (MaNhanVien) => {
       });
   };
 };
+
+
+
 
 // sửa nhân viên
 export const updatePersonnel = (MaNhanVien, data) => {
@@ -203,17 +208,3 @@ export const updatePersonnel = (MaNhanVien, data) => {
 };
 
 
-// export const fetchUpdateUnit = (id, unit) => {
-//   return (dispatch) => {
-//     dispatch(fetchUnitsRequest());
-//     axios
-//       .put(`https://knowledgehub.demopolyct.online/api/unit/${id}`, unit)
-//       .then(() => {
-//         dispatch(fetchUnits()); // Tải lại danh sách sau khi cập nhật thành công
-//       })
-//       .catch((error) => {
-//         const errorMsg = error.message;
-//         dispatch(fetchUnitsFailure(errorMsg));
-//       });
-//   };
-// };

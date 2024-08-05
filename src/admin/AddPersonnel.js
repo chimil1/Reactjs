@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchAdd } from "../actions/unitActions";
 import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2';
 function AddPersonnel() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,8 +36,15 @@ function AddPersonnel() {
     e.preventDefault();
     try {
       await dispatch(fetchAdd(personnel));
-      alert("Thêm nhân viên thành công!");
-      navigate('/qlpersonnel');
+      Swal.fire({
+        text: "Thêm nhân viên thành công!",
+        icon: "success"
+      }).then((result)=>{
+        if(result.isConfirmed){
+          navigate('/qlpersonnel');
+        }
+      })
+
     } catch (error) {
       alert("Có lỗi xảy ra khi thêm nhân viên.");
       console.error("Error adding personnel:", error.message);

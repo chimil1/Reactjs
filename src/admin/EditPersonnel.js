@@ -1,14 +1,14 @@
-import Menu from "./layout/Menu";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
+import Menu from "./layout/Menu";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchEmployeeDetails, updatePersonnel } from "../actions/unitActions";
 import { useForm } from "react-hook-form";
-
+import Swal from 'sweetalert2';
 function EditPersonnel() {
-    const { MaNhanVien } = useParams();
+    let { MaNhanVien } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const unitState = useSelector((state) => state.unit);
@@ -16,35 +16,39 @@ function EditPersonnel() {
         register,
         handleSubmit,
         formState: { errors },
-        setValue
+        setValue,
     } = useForm();
 
     useEffect(() => {
-        if (MaNhanVien) {
-            console.log("Fetching employee details for ID:", MaNhanVien);
-            dispatch(fetchEmployeeDetails(MaNhanVien));
-        } else {
-            console.error("No MaNhanVien found in URL parameters");
-        }
+        dispatch(fetchEmployeeDetails(MaNhanVien));
     }, [dispatch, MaNhanVien]);
 
     useEffect(() => {
-        if (unitState.selectedUnit) {
-            console.log("Selected unit details:", unitState.selectedUnit);
-            const fields = [
-                "Email",
-                "MatKhau",
-                "HoTen",
-                "DiaChi",
-                "SDT",
-                "Admin",
-                "Anh",
-                "ChucVu",
-                "LyLich"
-            ];
-            fields.forEach((field) => setValue(field, unitState.selectedUnit[field]));
+        if (Array.isArray(unitState.selectedUnit)) {
+            const selectedEmployee = unitState.selectedUnit.find(employee => employee.MaNhanVien === parseInt(MaNhanVien));
+            if (selectedEmployee) {
+                setValue("HoTen", selectedEmployee.HoTen || '');
+                setValue("Email", selectedEmployee.Email || '');
+                setValue("MatKhau", selectedEmployee.MatKhau || '');
+                setValue("SDT", selectedEmployee.SDT || '');
+                setValue("DiaChi", selectedEmployee.DiaChi || '');
+                setValue("LyLich", selectedEmployee.LyLich || '');
+                setValue("ChucVu", selectedEmployee.ChucVu || '');
+                setValue("Anh", selectedEmployee.Anh || '');
+                setValue("Admin", selectedEmployee.Admin || '');
+            }
         }
-    }, [unitState.selectedUnit, setValue]);
+    }, [unitState.selectedUnit, setValue, MaNhanVien]);
+
+    const submit = (data) => {
+        dispatch(updatePersonnel(MaNhanVien, data)); // Sử dụng action cập nhật sản phẩm
+        console.log(data);
+        Swal.fire({
+            text: "Cập nhật thành công!",
+            icon: "success"
+          });
+        navigate("/qlpersonnel");
+    };
 
     if (unitState.loading) {
         return <p>Loading...</p>;
@@ -53,13 +57,6 @@ function EditPersonnel() {
     if (unitState.error) {
         return <p>Error: {unitState.error}</p>;
     }
-
-    const submit = (data) => {
-        console.log("Submitting data:", data);
-        dispatch(updatePersonnel(MaNhanVien, data));
-        alert("Cập nhật nhân viên thành công!");
-        navigate("/qlpersonnel");
-    };
 
     return (
         <div className="page-wrapper">
@@ -73,14 +70,14 @@ function EditPersonnel() {
                                 <div className="col-lg-12">
                                     <div className="card">
                                         <div className="card-header">
-                                            <strong>Form</strong> chỉnh sửa Nhân Viên
+                                            <strong>Form</strong> chỉnh sửa nhân viên
                                         </div>
                                         <div className="card-body card-block">
-                                            <form onSubmit={handleSubmit(submit)}>
+                                            <form onSubmit={handleSubmit(submit)} className="form-horizontal">
                                                 <div className="row form-group">
                                                     <div className="col col-md-3">
                                                         <label htmlFor="HoTen" className="form-control-label">
-                                                            Họ Tên
+                                                            Tên nhân viên
                                                         </label>
                                                     </div>
                                                     <div className="col-12 col-md-9">
@@ -89,12 +86,12 @@ function EditPersonnel() {
                                                             type="text"
                                                             id="HoTen"
                                                             name="HoTen"
-                                                            placeholder="Nhập tên nhân viên..."
+                                                            placeholder="Nhập tên..."
                                                             className="form-control"
                                                         />
                                                         {errors.HoTen && (
                                                             <span className="text-danger">
-                                                                Họ Tên không được bỏ trống!
+                                                                Họ Tên Không được bỏ trống!
                                                             </span>
                                                         )}
                                                     </div>
@@ -108,15 +105,37 @@ function EditPersonnel() {
                                                     <div className="col-12 col-md-9">
                                                         <input
                                                             {...register("Email", { required: true })}
-                                                            type="text"
+                                                            type="email"
                                                             id="Email"
                                                             name="Email"
-                                                            placeholder="Nhập Email..."
+                                                            placeholder="Nhập email..."
                                                             className="form-control"
                                                         />
                                                         {errors.Email && (
                                                             <span className="text-danger">
-                                                                Email không được bỏ trống!
+                                                                Email Không được bỏ trống!
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="row form-group">
+                                                    <div className="col col-md-3">
+                                                        <label htmlFor="MatKhau" className="form-control-label">
+                                                            Mật Khẩu
+                                                        </label>
+                                                    </div>
+                                                    <div className="col-12 col-md-9">
+                                                        <input
+                                                            {...register("MatKhau", { required: true })}
+                                                            type="password"
+                                                            id="MatKhau"
+                                                            name="MatKhau"
+                                                            placeholder="Nhập Mật Khẩu..."
+                                                            className="form-control"
+                                                        />
+                                                        {errors.MatKhau && (
+                                                            <span className="text-danger">
+                                                                Mật Khẩu Không được bỏ trống!
                                                             </span>
                                                         )}
                                                     </div>
@@ -129,13 +148,81 @@ function EditPersonnel() {
                                                     </div>
                                                     <div className="col-12 col-md-9">
                                                         <input
-                                                            {...register("SDT")}
-                                                            type="number"
+                                                            {...register("SDT", { required: true })}
+                                                            type="text"
                                                             id="SDT"
                                                             name="SDT"
                                                             placeholder="Nhập SDT..."
                                                             className="form-control"
                                                         />
+                                                        {errors.SDT && (
+                                                            <span className="text-danger">
+                                                                Số Điện Thoại Không được bỏ trống!
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="row form-group">
+                                                    <div className="col col-md-3">
+                                                        <label htmlFor="DiaChi" className="form-control-label">
+                                                            Địa chỉ
+                                                        </label>
+                                                    </div>
+                                                    <div className="col-12 col-md-9">
+                                                        <input
+                                                            {...register("DiaChi", { required: true })}
+                                                            type="text"
+                                                            id="DiaChi"
+                                                            name="DiaChi"
+                                                            placeholder="Địa chỉ..."
+                                                            className="form-control"
+                                                        />
+                                                        {errors.DiaChi && (
+                                                            <span className="text-danger">
+                                                                Địa chỉ Không được bỏ trống!
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="row form-group">
+                                                    <div className="col col-md-3">
+                                                        <label htmlFor="LyLich" className="form-control-label">
+                                                            Lý lịch
+                                                        </label>
+                                                    </div>
+                                                    <div className="col-12 col-md-9">
+                                                        <textarea
+                                                            {...register("LyLich")}
+                                                            name="LyLich"
+                                                            id="LyLich"
+                                                            rows="9"
+                                                            placeholder="Lý lịch..."
+                                                            className="form-control"
+                                                        ></textarea>
+                                                    </div>
+                                                </div>
+                                                <div className="row form-group">
+                                                    <div className="col col-md-3">
+                                                        <label htmlFor="ChucVu" className="form-control-label">
+                                                            Chức vụ
+                                                        </label>
+                                                    </div>
+                                                    <div className="col-12 col-md-9">
+                                                        <select
+                                                            {...register("ChucVu", { required: true })}
+                                                            name="ChucVu"
+                                                            id="ChucVu"
+                                                            className="form-control"
+                                                        >
+                                                            <option value="">Chọn chức vụ</option>
+                                                            <option value="Nhân viên">Nhân viên</option>
+                                                            <option value="Quản lí">Quản lí</option>
+                                                        </select>
+                                                        {errors.ChucVu && (
+                                                            <span className="text-danger">
+                                                                Chức vụ Không được bỏ trống!
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="row form-group">
@@ -146,43 +233,39 @@ function EditPersonnel() {
                                                     </div>
                                                     <div className="col-12 col-md-9">
                                                         <input
-                                                            {...register("Anh")}
                                                             type="file"
                                                             id="file-input"
-                                                            name="Anh"
+                                                            name="file-input"
                                                             className="form-control-file"
                                                         />
                                                     </div>
                                                 </div>
                                                 <div className="row form-group">
-                                                    <div className="col col-md-3">
-                                                        <label htmlFor="ChucVu" className="form-control-label">
-                                                            ChucVu
-                                                        </label>
-                                                    </div>
-                                                    <div className="col-12 col-md-9">
-                                                        <select
-                                                            {...register("ChucVu", { required: true })}
-                                                            name="ChucVu"
-                                                            id="ChucVu"
-                                                            className="form-control"
-                                                        >
-                                                            <option value="">Chọn Chức Vụ</option>
-                                                            <option value="Nhân Viên">Nhân Viên</option>
-                                                            <option value="Quản Lý">Quản Lý</option>
-                                                        </select>
-                                                        {errors.ChucVu && (
-                                                            <span className="text-danger">
-                                                                Chức Vụ không được bỏ trống!
-                                                            </span>
-                                                        )}
-                                                    </div>
+                                                <div className="col col-md-3">
+                                                    <label htmlFor="Admin" className="form-control-label">
+                                                       Admin
+                                                    </label>
                                                 </div>
-                                                <div className="card-footer">
-                                                    <button
-                                                        type="submit"
-                                                        className="btn btn-primary btn-sm"
+                                                <div className="col-12 col-md-9">
+                                                    <select
+                                                        {...register("Admin", { required: true })}
+                                                        name="Admin"
+                                                        id="Admin"
+                                                        className="form-control"
                                                     >
+                                                        <option value="">Chọn chức vụ</option>
+                                                        <option value="1">Nhân viên</option>
+                                                        <option value="0">Quản lí</option>
+                                                    </select>
+                                                    {errors.Admin && (
+                                                        <span className="text-danger">
+                                                            admin Không được bỏ trống!
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                                <div className="card-footer">
+                                                    <button type="submit" className="btn btn-primary btn-sm">
                                                         <i className="fa fa-dot-circle-o"></i> Submit
                                                     </button>
                                                 </div>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchAddUnit } from "../actions/unitActions";
 import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2';
 
 function AddProduct() {
   const dispatch = useDispatch();
@@ -28,8 +29,14 @@ function AddProduct() {
   const submit = (data) => {
     dispatch(fetchAddUnit(data));
     console.log(data);
-    alert("Thêm sản phẩm thành công!");
-    navigate("/qlproduct");
+    Swal.fire({
+      text: "Thêm sản phẩm thành công!",
+      icon: "success"
+    }).then((result)=>{
+      if(result.isConfirmed){
+        navigate("/qlproduct");
+      }
+    })
   };
 
   return (

@@ -201,33 +201,34 @@ app.get('/api/employees/:MaNhanVien', (req, res) => {
       return res.status(500).send(err);
     }
     if (results.length === 0) {
-      return res.status(404).json({ message: 'Employee not found' });
+      return res.status(404).json({ message: 'Product not found' });
     }
-    return res.json(results[0]); // Return the first result
+    return res.json(results[0]); // Trả về sản phẩm đầu tiên trong kết quả
   });
 });
-
 
 app.put('/api/employees/:MaNhanVien', (req, res) => {
   const MaNhanVien = req.params.MaNhanVien;
-  const { Email, MatKhau, HoTen, DiaChi, SDT,Admin,Anh,ChucVu,LyLich } = req.body;
+  const { Email, MatKhau, HoTen, DiaChi, SDT, Admin, ChucVu, LyLich } = req.body;
 
   const sql = `
-    UPDATE nhanvien
-    SET Email = ?, MatKhau = ?, HoTen = ?, DiaChi = ?, SDT = ?,Admin = ?, Anh = ?, ChucVu = ?, LyLich = ?
-    WHERE MaNhanVien = ?
+      UPDATE nhanvien
+      SET Email = ?, MatKhau = ?, HoTen = ?, DiaChi = ?, SDT = ?, Admin = ?, ChucVu = ?, LyLich = ?
+      WHERE MaNhanVien = ?
   `;
-
-  db.query(sql, [Email, MatKhau, HoTen, DiaChi,Admin,Anh, SDT, ChucVu,LyLich,MaNhanVien], (err, results) => {
-    if (err) {
-      return res.status(500).send(err);
-    }
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ message: 'Employess not found' });
-    }
-    return res.json({ message: 'Employess updated successfully' });
+  db.query(sql, [Email, MatKhau, HoTen, DiaChi, SDT, Admin, ChucVu, LyLich, MaNhanVien], (err, results) => {
+      if (err) {
+          return res.status(500).send(err.message); // Send the error message instead of the entire error object
+      }
+      if (results.affectedRows === 0) {
+          return res.status(404).json({ message: 'Employee not found' });
+      }
+      return res.json({ message: 'Employee updated successfully' });
   });
 });
+
+
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

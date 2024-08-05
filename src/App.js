@@ -27,7 +27,7 @@ function App() {
           <Route path="/addpersonnel" element={<AddPersonnel />} />
 
           <Route path="/editproduct/:MaSanPham" element={<EditProduct />} />
-          <Route path="/editpersonnel/:MaNhanVien" element={<EditPersonnel />} />
+          <Route path="/editpersonnel/:MaNhanVien" element={<EditPersonnel/>} />
         </Routes>
       </BrowserRouter>
     </div>
