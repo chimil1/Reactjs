@@ -1,23 +1,26 @@
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Menu from "./layout/Menu";
 import img from "../asset/images/icon/thun1.webp";
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchUnits,fetchDelete} from "../actions/unitActions";
+import { fetchUnits, fetchDelete } from "../actions/unitActions";
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
-
+import './pt.css'
 function QlProduct() {
   const dispatch = useDispatch();
   const unitState = useSelector(state => state.unit);
+
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     dispatch(fetchUnits());
   }, [dispatch]);
 
   const handleDelete = (MaSanPham) => {
- 
     Swal.fire({
       text: "Bạn có muốn xóa sản phẩm này?",
       icon: "warning",
@@ -43,6 +46,16 @@ function QlProduct() {
   if (unitState.error) {
     return <p>Err: {unitState.error}</p>;
   }
+
+  // Calculate items to be displayed on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = unitState.units.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(unitState.units.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="page-wrapper">
@@ -82,9 +95,9 @@ function QlProduct() {
                             </tr>
                           </thead>
                           <tbody>
-                          {Array.isArray(unitState.units) && unitState.units.map((item,index) => (
+                            {Array.isArray(currentItems) && currentItems.map((item, index) => (
                               <tr key={item.MaSanPham}>
-                                <td>{index+1}</td>
+                                <td>{indexOfFirstItem + index + 1}</td>
                                 <td>{item.TenSanPham}</td>
                                 <td><img src={img} alt="" style={{ width: '100px', height: '100px' }} /></td>
                                 <td>{item.Gia}</td>
@@ -96,9 +109,9 @@ function QlProduct() {
                                       <i className="zmdi zmdi-mail-send"></i>
                                     </button>
                                     <Link to={`/editproduct/${item.MaSanPham}`}>
-                                    <button className="item" data-toggle="tooltip" data-placement="top" title="Edit">
-                                      <i className="zmdi zmdi-edit"></i>
-                                    </button>
+                                      <button className="item" data-toggle="tooltip" data-placement="top" title="Edit">
+                                        <i className="zmdi zmdi-edit"></i>
+                                      </button>
                                     </Link>{' '}
                                     <button onClick={() => handleDelete(item.MaSanPham)} className="item" data-toggle="tooltip" data-placement="top" title="Delete">
                                       <i className="zmdi zmdi-delete"></i>
@@ -109,6 +122,17 @@ function QlProduct() {
                             ))}
                           </tbody>
                         </table>
+                      </div>
+                      <div className="pagination">
+                        {[...Array(totalPages)].map((_, pageIndex) => (
+                          <button
+                            key={pageIndex}
+                            onClick={() => handlePageChange(pageIndex + 1)}
+                            className={pageIndex + 1 === currentPage ? "active" : ""}
+                          >
+                            {pageIndex + 1}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   </div>
