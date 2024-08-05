@@ -169,7 +169,38 @@ export const fetchAdd = (unit) => {
   };
 };
 
+export const fetchEmployeeDetails = (MaNhanVien) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .get(`http://localhost:3001/api/employees/${MaNhanVien}`)
+      .then((response) => {
+        const unit = response.data;
+        dispatch(fetchUnitsSuccess(unit));
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
 
+// sửa nhân viên
+export const updatePersonnel = (MaNhanVien, data) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .put(`http://localhost:3001/api/employees/${MaNhanVien}`, data)
+      .then((response) => {
+        const unit = response.data;
+        dispatch(fetchUnitsSuccess(unit));
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
 
 
 // export const fetchUpdateUnit = (id, unit) => {

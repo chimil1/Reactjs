@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchAdd } from "../actions/unitActions";
-
+import { useForm } from "react-hook-form";
 function AddPersonnel() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,14 +20,17 @@ function AddPersonnel() {
     Anh: '',
     Admin: '1',
   });
-
+  
   const handleChange = (e) => {
     setPersonnel({
       ...personnel,
       [e.target.name]: e.target.value,
     });
   };
-
+  const {
+    register,
+    formState: {errors},
+  } = useForm ();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -64,14 +67,19 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                             {...register("HoTen", { required: true })}
                               type="text"
                               id="HoTen"
-                              name="HoTen"
-                              value={personnel.HoTen}
+                              name="HoTen" 
                               onChange={handleChange}
                               placeholder="Nhập tên..."
                               className="form-control"
                             />
+                            {errors.HoTen &&(
+                              <span className="text-danger">
+                                Họ Tên Không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
@@ -82,14 +90,19 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                              {...register("Email", { required: true })}
                               type="email"
                               id="Email"
                               name="Email"
-                              value={personnel.Email}
                               onChange={handleChange}
                               placeholder="Nhập email..."
                               className="form-control"
                             />
+                            {errors.Email &&(
+                              <span className="text-danger">
+                                Email Không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
@@ -100,14 +113,19 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                              {...register("MatKhau", { required: true })}
                               type="password"
                               id="MatKhau"
                               name="MatKhau"
-                              value={personnel.MatKhau}
                               onChange={handleChange}
                               placeholder="Nhập Mật Khẩu..."
                               className="form-control"
                             />
+                            {errors.MatKhau &&(
+                              <span className="text-danger">
+                                Mật Khẩu Không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
@@ -118,14 +136,19 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                            {...register("SDT", { required: true })}
                               type="text"
                               id="SDT"
                               name="SDT"
-                              value={personnel.SDT}
                               onChange={handleChange}
                               placeholder="Nhập SDT..."
                               className="form-control"
                             />
+                            {errors.SDT &&(
+                              <span className="text-danger">
+                                Số Điện Thoại Không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
@@ -136,14 +159,19 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
+                            {...register("DiaChi", { required: true })}
                               type="text"
                               id="DiaChi"
                               name="DiaChi"
-                              value={personnel.DiaChi}
                               onChange={handleChange}
                               placeholder="Địa chỉ..."
                               className="form-control"
                             />
+                            {errors.DiaChi &&(
+                              <span className="text-danger">
+                                địa chỉ Không được bỏ trống!
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">
@@ -156,9 +184,8 @@ function AddPersonnel() {
                             <textarea
                               name="LyLich"
                               id="LyLich"
-                              rows="9"
-                              value={personnel.LyLich}
                               onChange={handleChange}
+                              rows="9"
                               placeholder="Lý lịch..."
                               className="form-control"
                             ></textarea>
@@ -174,7 +201,6 @@ function AddPersonnel() {
                             <select
                               name="ChucVu"
                               id="ChucVu"
-                              value={personnel.ChucVu}
                               onChange={handleChange}
                               className="form-control"
                             >

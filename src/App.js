@@ -8,6 +8,7 @@ import QlPersonnel from "./admin/QlPersonnel";
 import QlProduct from "./admin/QlProduct";
 import QlList from "./admin/QlList";
 import EditProduct from "./admin/EditProduct";
+import EditPersonnel from "./admin/EditPersonnel";
 
 
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/addpersonnel" element={<AddPersonnel />} />
 
           <Route path="/editproduct/:MaSanPham" element={<EditProduct />} />
+          <Route path="/editpersonnel/:MaNhanVien" element={<EditPersonnel />} />
         </Routes>
       </BrowserRouter>
     </div>

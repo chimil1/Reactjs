@@ -5,6 +5,7 @@ import image from "../asset/images/icon/avatar-01.jpg";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEmployee,fetchDelete1} from "../actions/unitActions";
+import { Link } from "react-router-dom";
 function QlPersonnel() {
   const dispatch = useDispatch();
   const unitState = useSelector(state => state.unit);
@@ -91,7 +92,8 @@ function QlPersonnel() {
                                     >
                                       <i className="zmdi zmdi-mail-send"></i>
                                     </button>
-                                    <button
+                                    <Link to={`/editpersonnel/${item.MaNhanVien}`}>
+                                    <button 
                                       className="item"
                                       data-toggle="tooltip"
                                       data-placement="top"
@@ -99,6 +101,7 @@ function QlPersonnel() {
                                     >
                                       <i className="zmdi zmdi-edit"></i>
                                     </button>
+                                    </Link>
                                     <button onClick={()=>handleDelete(item.MaNhanVien)}
                                       className="item"
                                       data-toggle="tooltip"
