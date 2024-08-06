@@ -1,14 +1,14 @@
 import Menu from "./layout/Menu";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { fetchAddUnit } from "../actions/unitActions";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchUnitDetails, updateProduct } from "../actions/unitActions"; // Cập nhật action
 import { useForm } from "react-hook-form";
-import Swal from 'sweetalert2';
-
-function AddProduct() {
+import Swal from "sweetalert2";
+function EditProduct() {
+  let { MaSanPham } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const unitState = useSelector((state) => state.unit);
@@ -16,7 +16,26 @@ function AddProduct() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
+
+  useEffect(() => {
+    dispatch(fetchUnitDetails(MaSanPham)); // Sử dụng action lấy chi tiết sản phẩm
+  }, [dispatch, MaSanPham]);
+
+  useEffect(() => {
+    console.log("Unit State:", unitState.selectedUnit);
+    if (unitState.selectedUnit) {
+      // Sử dụng selectedUnit
+      setValue("TenSanPham", unitState.selectedUnit.TenSanPham);
+      setValue("Gia", unitState.selectedUnit.Gia);
+      setValue("GiaKhuyenMai", unitState.selectedUnit.GiaKhuyenMai);
+      setValue("SoLuong", unitState.selectedUnit.SoLuong);
+      setValue("MoTa", unitState.selectedUnit.MoTa);
+      setValue("MaDanhMuc", unitState.selectedUnit.MaDanhMuc);
+      setValue("TrangThai", unitState.selectedUnit.TrangThai);
+    }
+  }, [unitState.selectedUnit, setValue]);
 
   if (unitState.loading) {
     return <p>Loading...</p>;
@@ -27,16 +46,13 @@ function AddProduct() {
   }
 
   const submit = (data) => {
-    dispatch(fetchAddUnit(data));
+    dispatch(updateProduct(MaSanPham, data)); // Sử dụng action cập nhật sản phẩm
     console.log(data);
     Swal.fire({
-      text: "Thêm sản phẩm thành công!",
-      icon: "success"
-    }).then((result)=>{
-      if(result.isConfirmed){
-        navigate("/qlproduct");
-      }
-    })
+      text: "Cập nhật sản phẩm thành công!",
+      icon: "success",
+    });
+    navigate("/qlproduct");
   };
 
   return (
@@ -51,7 +67,7 @@ function AddProduct() {
                 <div className="col-lg-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong>Form</strong> thêm sản phẩm
+                      <strong>Form</strong> chỉnh sửa sản phẩm
                     </div>
                     <div className="card-body card-block">
                       <form onSubmit={handleSubmit(submit)}>
@@ -97,7 +113,7 @@ function AddProduct() {
                             />
                             {errors.Gia && (
                               <span className="text-danger">
-                              Giá sản phẩm không được bỏ trống!
+                                Giá sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -142,7 +158,7 @@ function AddProduct() {
                             />
                             {errors.SoLuong && (
                               <span className="text-danger">
-                              Số lượng sản phẩm không được bỏ trống!
+                                Số lượng sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -167,7 +183,7 @@ function AddProduct() {
                             ></textarea>
                             {errors.MoTa && (
                               <span className="text-danger">
-                            Mô tả sản phẩm không được bỏ trống!
+                                Mô tả sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -195,7 +211,7 @@ function AddProduct() {
                             </select>
                             {errors.MaDanhMuc && (
                               <span className="text-danger">
-                              Danh mục sản phẩm không được bỏ trống!
+                                Danh mục sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -235,7 +251,7 @@ function AddProduct() {
                               id="TrangThai"
                               className="form-control"
                             >
-                              <option value="">Chọn danh mục</option>
+                              <option value="">Chọn trạng thái</option>
                               <option value="Đang hoạt động">
                                 Đang hoạt động
                               </option>
@@ -245,7 +261,7 @@ function AddProduct() {
                             </select>
                             {errors.TrangThai && (
                               <span className="text-danger">
-                              Trạng thái sản phẩm không được bỏ trống!
+                                Trạng thái sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -272,4 +288,4 @@ function AddProduct() {
   );
 }
 
-export default AddProduct;
+export default EditProduct;

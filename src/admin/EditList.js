@@ -1,14 +1,14 @@
-import Menu from "./layout/Menu";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
-import React from "react";
+import Menu from "./layout/Menu";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { fetchAddCate } from "../actions/unitActions";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchCateDetails, updateCate } from "../actions/unitActions";
 import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
-
-function AddList() {
+function EditList() {
+  let { MaDanhMuc } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const unitState = useSelector((state) => state.unit);
@@ -16,7 +16,33 @@ function AddList() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
+
+  useEffect(() => {
+    dispatch(fetchCateDetails(MaDanhMuc));
+  }, [dispatch, MaDanhMuc]);
+
+  useEffect(() => {
+    if (Array.isArray(unitState.selectedUnit)) {
+      const selectedEmployee = unitState.selectedUnit.find(employee => employee.MaDanhMuc === parseInt(MaDanhMuc));
+      if (selectedEmployee) {
+        setValue("TenDanhMuc", selectedEmployee.TenDanhMuc || '');
+
+        setValue("TrangThai", selectedEmployee.Admin || '');
+      }
+    }
+  }, [unitState.selectedUnit, setValue, MaDanhMuc]);
+
+  const submit = (data) => {
+    dispatch(updateCate(MaDanhMuc, data)); // Sử dụng action cập nhật sản phẩm
+    console.log(data);
+    Swal.fire({
+      text: "Cập nhật thành công!",
+      icon: "success"
+    });
+    navigate("/qllist");
+  };
 
   if (unitState.loading) {
     return <p>Loading...</p>;
@@ -25,19 +51,6 @@ function AddList() {
   if (unitState.error) {
     return <p>Error: {unitState.error}</p>;
   }
-
-  const submit = (data) => {
-    dispatch(fetchAddCate(data));
-    console.log(data);
-    Swal.fire({
-      text: "Thêm sản phẩm thành công!",
-      icon: "success"
-    }).then((result)=>{
-      if(result.isConfirmed){
-        navigate("/qllist");
-      }
-    })
-  };
 
   return (
     <div className="page-wrapper">
@@ -51,17 +64,14 @@ function AddList() {
                 <div className="col-lg-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong>Form</strong> thêm danh mục
+                      <strong>Form</strong> chỉnh sửa nhân viên
                     </div>
                     <div className="card-body card-block">
-                      <form onSubmit={handleSubmit(submit)}>
+                      <form onSubmit={handleSubmit(submit)} className="form-horizontal">
                         <div className="row form-group">
                           <div className="col col-md-3">
-                            <label
-                              htmlFor="TenDanhMuc"
-                              className="form-control-label"
-                            >
-                              Tên danh mục
+                            <label htmlFor="TenDanhMuc" className="form-control-label">
+                              Tên nhân viên
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
@@ -70,22 +80,18 @@ function AddList() {
                               type="text"
                               id="TenDanhMuc"
                               name="TenDanhMuc"
-                              placeholder="Nhập tên sản phẩm..."
+                              placeholder="Nhập tên..."
                               className="form-control"
                             />
                             {errors.TenDanhMuc && (
                               <span className="text-danger">
-                                Tên sản phẩm không được bỏ trống!
+                                Họ Tên Không được bỏ trống!
                               </span>
                             )}
                           </div>
                         </div>
-                        
-                      
-                        
-                       
-                     
-                       
+
+
                         <div className="row form-group">
                           <div className="col col-md-3">
                             <label
@@ -121,7 +127,7 @@ function AddList() {
                               id="TrangThai"
                               className="form-control"
                             >
-                              <option value="">Chọn danh mục</option>
+                              <option value="">Chọn trạng thái</option>
                               <option value="Đang hoạt động">
                                 Đang hoạt động
                               </option>
@@ -131,7 +137,7 @@ function AddList() {
                             </select>
                             {errors.TrangThai && (
                               <span className="text-danger">
-                              Trạng thái sản phẩm không được bỏ trống!
+                                Trạng thái sản phẩm không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -158,4 +164,4 @@ function AddList() {
   );
 }
 
-export default AddList;
+export default EditList;

@@ -7,7 +7,8 @@ import AddProduct from "./admin/AddProduct";
 import QlPersonnel from "./admin/QlPersonnel";
 import QlProduct from "./admin/QlProduct";
 import QlList from "./admin/QlList";
-
+import EditList from "./admin/EditList";
+import EditProduct from "./admin/EditProduct";
 
 
 function App() {
@@ -15,14 +16,18 @@ function App() {
     <div className="App">
       <BrowserRouter basename="/">
         <Routes>
-          <Route path="/" exact element={<Dashboard />} />
+        <Route path="/" exact element={<Dashboard />} />
          <Route path="/qllist" element={<QlList/>}/>
           <Route path="/qlpersonnel" element={<QlPersonnel />} />
           <Route path="/qlproduct" element={<QlProduct />} />
 
-          <Route path="/addlist" element={<AddList />} />
-          <Route path="/addproduct" element={<AddProduct />} />
+          <Route path="/addlist" element={<AddList />} />         
           <Route path="/addpersonnel" element={<AddPersonnel />} />
+          <Route path="/addproduct" element={<AddProduct />} />
+
+          <Route path="/editproduct/:MaSanPham" element={<EditProduct />} />
+          <Route path="/editlist/:MaDanhMuc" element={<EditList/>} />/
+          {/* <Route path="/editpersonnel/:MaNhanVien" element={<EditPersonnel/>} /> */}
         </Routes>
       </BrowserRouter>
     </div>
