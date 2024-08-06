@@ -9,6 +9,7 @@ import QlProduct from "./admin/QlProduct";
 import QlList from "./admin/QlList";
 import EditProduct from "./admin/EditProduct";
 import EditPersonnel from "./admin/EditPersonnel";
+import EditList from "./admin/EditList";
 
 
 
@@ -28,6 +29,7 @@ function App() {
 
           <Route path="/editproduct/:MaSanPham" element={<EditProduct />} />
           <Route path="/editpersonnel/:MaNhanVien" element={<EditPersonnel/>} />
+          <Route path="/editlist/:MaDanhMuc" element={<EditList/>} />
         </Routes>
       </BrowserRouter>
     </div>

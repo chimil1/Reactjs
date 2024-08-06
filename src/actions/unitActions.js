@@ -208,3 +208,91 @@ export const updatePersonnel = (MaNhanVien, data) => {
 };
 
 
+
+
+export const fetchCate = () => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .get("http://localhost:3001/api/Cates")
+      .then((response) => {
+        const units = response.data;
+        dispatch(fetchUnitsSuccess(units));
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
+//xóa
+export const fetchDeleteCate = (MaDanhMuc) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .delete(`http://localhost:3001/api/Cates/${MaDanhMuc}`)
+      .then((response) => {
+        const units = response.data;
+        dispatch(fetchUnitsSuccess(units));
+        dispatch(fetchCate());
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
+//thêm
+
+export const fetchAddCate = (unit) => {
+  return async (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    try {
+      const response = await axios.post('http://localhost:3001/api/Cates', unit);
+      dispatch(fetchCate());
+      return response.data;
+    } catch (error) {
+      const errorMsg = error.message;
+      dispatch(fetchUnitsFailure(errorMsg));
+      throw error;
+    }
+  };
+};
+
+
+export const fetchCateDetails = (MaDanhMuc) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .get(`http://localhost:3001/api/Cates/${MaDanhMuc}`)
+      .then((response) => {
+        const unit = response.data;
+        dispatch(fetchUnitsSuccess(unit));
+        dispatch(fetchCate());
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};
+
+
+
+
+// sửa nhân viên
+export const updateCate = (MaDanhMuc, data) => {
+  return (dispatch) => {
+    dispatch(fetchUnitsRequest());
+    axios
+      .put(`http://localhost:3001/api/Cates/${MaDanhMuc}`, data)
+      .then((response) => {
+        const unit = response.data;
+        dispatch(fetchUnitsSuccess(unit));
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        dispatch(fetchUnitsFailure(errorMsg));
+      });
+  };
+};

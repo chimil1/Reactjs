@@ -229,6 +229,82 @@ app.put('/api/employees/:MaNhanVien', (req, res) => {
 
 
 
+
+app.get("/api/Cates", (req, res) => {
+  const sql = "SELECT * FROM danhmuc";
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    return res.json(results);
+  });
+});
+//xóa nhân viên
+app.delete("/api/Cates/:MaDanhMuc", (req, res) => {
+  const MaDanhMuc = req.params.MaDanhMuc;
+  const sql = "DELETE FROM danhmuc WHERE MaDanhMuc = ?";
+  db.query(sql, [MaDanhMuc], (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    return res.json({ message: "Deleted successfully" });
+  });
+});
+//thêm nhân viên
+app.post("/api/Cates", (req, res) => {
+  const { TenDanhMuc, TrangThai } = req.body;
+  console.log('Received data for new category:', req.body);
+
+  const sql = "INSERT INTO danhmuc (TenDanhMuc, TrangThai) VALUES ( ?,?)";
+  
+  db.query(sql, [TenDanhMuc, TrangThai], (err, result) => {
+    if (err) {
+      console.error('Database error during category insertion:', err);
+      return res.status(500).send(err);
+    }
+    console.log('Category added successfully:', result);
+    return res.status(201).json({ message: "Thêm sản phẩm thành công!", data: result });
+  });
+});
+
+app.get('/api/Cates/:MaDanhMuc', (req, res) => {
+  const MaDanhMuc = req.params.MaDanhMuc;
+  const sql = 'SELECT * FROM danhmuc WHERE MaDanhMuc = ?';
+
+  db.query(sql, [MaDanhMuc], (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    return res.json(results[0]); // Trả về sản phẩm đầu tiên trong kết quả
+  });
+});
+
+app.put('/api/Cates/:MaDanhMuc', (req, res) => {
+  const MaDanhMuc = req.params.MaDanhMuc;
+  const { TenDanhMuc, TrangThai} = req.body;
+
+  const sql = `
+      UPDATE danhmuc
+      SET TenDanhMuc = ?, TrangThai = ?
+      WHERE MaDanhMuc = ?
+  `;
+  db.query(sql, [TenDanhMuc, TrangThai, MaDanhMuc], (err, results) => {
+    if (err) {
+      return res.status(500).send(err.message); // Send the error message instead of the entire error object
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+    return res.json({ message: 'Employee updated successfully' });
+  });
+});
+
+
+
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
