@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { fetchEmployeeDetails, updatePersonnel } from "../actions/unitActions";
 import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
+
 function EditPersonnel() {
     let { MaNhanVien } = useParams();
     const dispatch = useDispatch();
@@ -24,19 +25,17 @@ function EditPersonnel() {
     }, [dispatch, MaNhanVien]);
 
     useEffect(() => {
-        if (Array.isArray(unitState.selectedUnit)) {
-            const selectedEmployee = unitState.selectedUnit.find(employee => employee.MaNhanVien === parseInt(MaNhanVien));
-            if (selectedEmployee) {
-                setValue("HoTen", selectedEmployee.HoTen || '');
-                setValue("Email", selectedEmployee.Email || '');
-                setValue("MatKhau", selectedEmployee.MatKhau || '');
-                setValue("SDT", selectedEmployee.SDT || '');
-                setValue("DiaChi", selectedEmployee.DiaChi || '');
-                setValue("LyLich", selectedEmployee.LyLich || '');
-                setValue("ChucVu", selectedEmployee.ChucVu || '');
-                setValue("Anh", selectedEmployee.Anh || '');
-                setValue("Admin", selectedEmployee.Admin || '');
-            }
+        if (unitState.selectedUnit && unitState.selectedUnit.MaNhanVien === parseInt(MaNhanVien)) {
+            const selectedEmployee = unitState.selectedUnit;
+            setValue("HoTen", selectedEmployee.HoTen || '');
+            setValue("Email", selectedEmployee.Email || '');
+            setValue("MatKhau", selectedEmployee.MatKhau || '');
+            setValue("SDT", selectedEmployee.SDT || '');
+            setValue("DiaChi", selectedEmployee.DiaChi || '');
+            setValue("LyLich", selectedEmployee.LyLich || '');
+            setValue("ChucVu", selectedEmployee.ChucVu || '');
+            setValue("Anh", selectedEmployee.Anh || '');
+            setValue("Admin", selectedEmployee.Admin || '');
         }
     }, [unitState.selectedUnit, setValue, MaNhanVien]);
 
@@ -241,29 +240,29 @@ function EditPersonnel() {
                                                     </div>
                                                 </div>
                                                 <div className="row form-group">
-                                                <div className="col col-md-3">
-                                                    <label htmlFor="Admin" className="form-control-label">
-                                                       Admin
-                                                    </label>
+                                                    <div className="col col-md-3">
+                                                        <label htmlFor="Admin" className="form-control-label">
+                                                           Admin
+                                                        </label>
+                                                    </div>
+                                                    <div className="col-12 col-md-9">
+                                                        <select
+                                                            {...register("Admin", { required: true })}
+                                                            name="Admin"
+                                                            id="Admin"
+                                                            className="form-control"
+                                                        >
+                                                            <option value="">Chọn chức vụ</option>
+                                                            <option value="1">Nhân viên</option>
+                                                            <option value="0">Quản lí</option>
+                                                        </select>
+                                                        {errors.Admin && (
+                                                            <span className="text-danger">
+                                                                Admin Không được bỏ trống!
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <div className="col-12 col-md-9">
-                                                    <select
-                                                        {...register("Admin", { required: true })}
-                                                        name="Admin"
-                                                        id="Admin"
-                                                        className="form-control"
-                                                    >
-                                                        <option value="">Chọn chức vụ</option>
-                                                        <option value="1">Nhân viên</option>
-                                                        <option value="0">Quản lí</option>
-                                                    </select>
-                                                    {errors.Admin && (
-                                                        <span className="text-danger">
-                                                            admin Không được bỏ trống!
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
                                                 <div className="card-footer">
                                                     <button type="submit" className="btn btn-primary btn-sm">
                                                         <i className="fa fa-dot-circle-o"></i> Submit

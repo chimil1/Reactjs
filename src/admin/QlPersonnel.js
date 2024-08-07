@@ -50,6 +50,10 @@ function QlPersonnel() {
   if (unitState.error) {
     return <p>Err: {unitState.error}</p>;
   }
+    // Check if unitState.units is an array before using slice
+    if (!Array.isArray(unitState.units)) {
+      return <p>Error: Data format is incorrect, expected an array.</p>;
+    }
 
   // Calculate items to be displayed on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -97,7 +101,7 @@ function QlPersonnel() {
                             </tr>
                           </thead>
                           <tbody>
-                            {Array.isArray(currentItems) && currentItems.map((item, index) => (
+                          {currentItems.map((item, index) => (
                               <tr key={item.MaNhanVien}>
                                 <td>{indexOfFirstItem + index + 1}</td>
                                 <td>{item.HoTen}</td>

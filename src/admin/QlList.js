@@ -107,7 +107,7 @@ function QlList() {
                                 <td>{indexOfFirstItem + index + 1}</td>
                                 <td>{item.TenDanhMuc}</td>
                                 <td><img src={img} alt="" style={{ width: '100px', height: '100px' }} /></td>
-                                <td>{item.TrangThai}</td>
+                                <td className="status--process">{item.TrangThai}</td>
                                 <td>
                                   <div className="table-data-feature">
                                     <button className="item" data-toggle="tooltip" data-placement="top" title="Send">

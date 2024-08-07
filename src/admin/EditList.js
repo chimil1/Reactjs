@@ -66,7 +66,7 @@ function EditList() {
                 <div className="col-lg-12">
                   <div className="card">
                     <div className="card-header">
-                      <strong>Form</strong> chỉnh sửa nhân viên
+                      <strong>Form</strong> chỉnh sửa danh mục
                     </div>
                     <div className="card-body card-block">
                       <form
@@ -79,7 +79,7 @@ function EditList() {
                               htmlFor="TenDanhMuc"
                               className="form-control-label"
                             >
-                              Tên nhân viên
+                              Tên danh mục
                             </label>
                           </div>
                           <div className="col-12 col-md-9">
@@ -93,7 +93,7 @@ function EditList() {
                             />
                             {errors.TenDanhMuc && (
                               <span className="text-danger">
-                                Họ Tên Không được bỏ trống!
+                                Tên danh mục Không được bỏ trống!
                               </span>
                             )}
                           </div>

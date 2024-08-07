@@ -7,11 +7,15 @@ import img from "../asset/images/icon/thun1.webp";
 import { fetchUnits, fetchDelete } from "../actions/unitActions";
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
-import './pt.css'
+import './pt.css';
+
 function QlProduct() {
   const dispatch = useDispatch();
   const unitState = useSelector(state => state.unit);
-
+  //format giá sản phẩm
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -46,6 +50,10 @@ function QlProduct() {
   if (unitState.error) {
     return <p>Err: {unitState.error}</p>;
   }
+    // Check if unitState.units is an array before using slice
+    if (!Array.isArray(unitState.units)) {
+      return <p>Error: Data format is incorrect, expected an array.</p>;
+    }
 
   // Calculate items to be displayed on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -95,13 +103,13 @@ function QlProduct() {
                             </tr>
                           </thead>
                           <tbody>
-                            {Array.isArray(currentItems) && currentItems.map((item, index) => (
+                          {currentItems.map((item, index) => (
                               <tr key={item.MaSanPham}>
                                 <td>{indexOfFirstItem + index + 1}</td>
                                 <td>{item.TenSanPham}</td>
                                 <td><img src={img} alt="" style={{ width: '100px', height: '100px' }} /></td>
-                                <td>{item.Gia}</td>
-                                <td>{item.GiaKhuyenMai}</td>
+                                <td>{formatCurrency(item.Gia)}</td>
+                                <td>{formatCurrency(item.GiaKhuyenMai)}</td>
                                 <td className="process">{item.SoLuong}</td>
                                 <td>
                                   <div className="table-data-feature">

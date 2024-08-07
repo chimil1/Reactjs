@@ -75,7 +75,7 @@ function AddList() {
                             />
                             {errors.TenDanhMuc && (
                               <span className="text-danger">
-                                Tên sản phẩm không được bỏ trống!
+                                Tên danh mục không được bỏ trống!
                               </span>
                             )}
                           </div>
@@ -125,7 +125,7 @@ function AddList() {
                             </select>
                             {errors.TrangThai && (
                               <span className="text-danger">
-                                Trạng thái sản phẩm không được bỏ trống!
+                                Trạng thái danh mục không được bỏ trống!
                               </span>
                             )}
                           </div>
