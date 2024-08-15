@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
+const multer = require('multer');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
@@ -15,6 +16,19 @@ const db = mysql.createConnection({
   password: "mysql", // Thay đổi nếu cần
   database: "asm_nodejs",
 });
+// xử lí hình ảnh
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+ 
+var upload = multer({ storage: storage })
+
+
 
 app.get("/api/units", (req, res) => {
   const sql = "SELECT * FROM sanpham";
@@ -191,7 +205,15 @@ app.post("/api/employees", (req, res) => {
     }
   );
 });
-
+app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
+  const file = req.file
+  if (!file) {
+    const error = new Error('Please upload a file')
+    error.httpStatusCode = 400
+    return next(error)
+  }
+  res.send(file)
+})
 app.get('/api/employees/:MaNhanVien', (req, res) => {
   const MaNhanVien = req.params.MaNhanVien;
   const sql = 'SELECT * FROM nhanvien WHERE MaNhanVien = ?';

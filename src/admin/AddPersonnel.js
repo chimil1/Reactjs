@@ -46,7 +46,7 @@ function AddPersonnel() {
                       <strong>Form</strong> thêm nhân viên
                     </div>
                     <div className="card-body card-block">
-                      <form onSubmit={handleSubmit(onSubmit)} className="form-horizontal">
+                      <form onSubmit={handleSubmit(onSubmit)} className="form-horizontal" action="/uploadfile" enctype="multipart/form-data" method="POST">
                         <div className="row form-group">
                           <div className="col col-md-3">
                             <label htmlFor="HoTen" className="form-control-label">
@@ -235,7 +235,7 @@ function AddPersonnel() {
                             <input
                               type="file"
                               id="file-input"
-                              name="file-input"
+                              name="myFile"
                               className="form-control-file"
                             />
                           </div>
