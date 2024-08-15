@@ -17,6 +17,7 @@ function EditProduct() {
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm();
 
   useEffect(() => {
@@ -34,6 +35,7 @@ function EditProduct() {
       setValue("MoTa", unitState.selectedUnit.MoTa);
       setValue("MaDanhMuc", unitState.selectedUnit.MaDanhMuc);
       setValue("TrangThai", unitState.selectedUnit.TrangThai);
+    
     }
   }, [unitState.selectedUnit, setValue]);
 
@@ -46,7 +48,23 @@ function EditProduct() {
   }
 
   const submit = (data) => {
-    dispatch(updateProduct(MaSanPham, data)); // Sử dụng action cập nhật sản phẩm
+    const formData = new FormData();
+    formData.append("TenSanPham", data.TenSanPham);
+    formData.append("Gia", data.Gia);
+    formData.append("GiaKhuyenMai", data.GiaKhuyenMai);
+    formData.append("SoLuong", data.SoLuong);
+    formData.append("MoTa", data.MoTa);
+    formData.append("MaDanhMuc", data.MaDanhMuc);
+    formData.append("TrangThai", data.TrangThai);
+    
+    if (data.HinhAnh && data.HinhAnh.length > 0) {
+      Array.from(data.HinhAnh).forEach((file) => {
+        formData.append("HinhAnh", file);
+      });
+    }
+
+    dispatch(updateProduct(MaSanPham, formData)); // Sử dụng action cập nhật sản phẩm
+
     console.log(data);
     Swal.fire({
       text: "Cập nhật sản phẩm thành công!",
@@ -104,7 +122,11 @@ function EditProduct() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("Gia", { required: true })}
+                              {...register("Gia", {
+                                required: "Giá sản phẩm không được bỏ trống!",
+                                validate: (value) =>
+                                  value > 0 || "Giá sản phẩm phải lớn hơn 0",
+                              })}
                               type="number"
                               id="Gia"
                               name="Gia"
@@ -113,7 +135,7 @@ function EditProduct() {
                             />
                             {errors.Gia && (
                               <span className="text-danger">
-                                Giá sản phẩm không được bỏ trống!
+                                {errors.Gia.message}
                               </span>
                             )}
                           </div>
@@ -129,13 +151,29 @@ function EditProduct() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("GiaKhuyenMai")}
+                              {...register("GiaKhuyenMai", {
+                                validate: (value) => {
+                                  const gia = Number(getValues("Gia")); // Lấy giá trị của trường "Gia"
+
+                                  if (value < 0) {
+                                    return "Giá khuyến mãi phải lớn hơn hoặc bằng 0!";
+                                  }
+                                  if (value > gia) {
+                                    return "Giá khuyến mãi không được lớn hơn giá sản phẩm!";
+                                  }
+                                },
+                              })}
                               type="number"
                               id="GiaKhuyenMai"
                               name="GiaKhuyenMai"
                               placeholder="Nhập giá khuyến mãi sản phẩm..."
                               className="form-control"
                             />
+                            {errors.GiaKhuyenMai && (
+                              <span className="text-danger">
+                                {errors.GiaKhuyenMai.message}
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">

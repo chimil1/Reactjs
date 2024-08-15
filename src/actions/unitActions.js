@@ -92,20 +92,8 @@ export const updateProduct = (MaSanPham, data) => {
       });
   };
 };
-// export const fetchAddUnit = (unit) => {
-//   return (dispatch) => {
-//     dispatch(fetchUnitsRequest());
-//     axios
-//       .post("http://localhost:3001/api/units", unit)
-//       .then(() => {
-//         dispatch(fetchUnits());
-//       })
-//       .catch((error) => {
-//         const errorMsg = error.message;
-//         dispatch(fetchUnitsFailure(errorMsg));
-//       });
-//   };
-// };
+
+
 export const fetchAddUnit = (unit) => {
   return (dispatch) => {
     dispatch(fetchUnitsRequest());

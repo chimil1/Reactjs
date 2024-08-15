@@ -15,7 +15,7 @@ function AddProduct() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors },getValues
   } = useForm();
 
   if (unitState.loading) {
@@ -27,7 +27,17 @@ function AddProduct() {
   }
 
   const submit = (data) => {
-    dispatch(fetchAddUnit(data));
+    const formData = new FormData();
+    formData.append("TenSanPham", data.TenSanPham);
+    formData.append("Gia", data.Gia);
+    formData.append("GiaKhuyenMai", data.GiaKhuyenMai);
+    formData.append("SoLuong", data.SoLuong);
+    formData.append("MoTa", data.MoTa);
+    formData.append("MaDanhMuc", data.MaDanhMuc);
+    formData.append("TrangThai", data.TrangThai);
+    formData.append("HinhAnh", data.HinhAnh[0]); // HinhAnh là một mảng, chỉ cần phần tử đầu tiên
+  
+    dispatch(fetchAddUnit(formData));
     console.log(data);
     Swal.fire({
       text: "Thêm sản phẩm thành công!",
@@ -88,7 +98,10 @@ function AddProduct() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("Gia", { required: true })}
+                            {...register("Gia", {
+                              required: "Giá sản phẩm không được bỏ trống!",
+                              validate: (value) => value > 0 || "Giá sản phẩm phải lớn hơn 0",
+                            })}
                               type="number"
                               id="Gia"
                               name="Gia"
@@ -96,9 +109,7 @@ function AddProduct() {
                               className="form-control"
                             />
                             {errors.Gia && (
-                              <span className="text-danger">
-                              Giá sản phẩm không được bỏ trống!
-                              </span>
+                              <span className="text-danger">{errors.Gia.message}</span>
                             )}
                           </div>
                         </div>
@@ -113,13 +124,26 @@ function AddProduct() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("GiaKhuyenMai")}
+                            {...register("GiaKhuyenMai", {
+                              validate: (value) => {
+                                const gia = Number(getValues("Gia"));  // Lấy giá trị của trường "Gia"
+                                if (value < 0) {
+                                  return "Giá khuyến mãi phải lớn hơn hoặc bằng 0!";
+                                }
+                                if (value > gia) {
+                                  return "Giá khuyến mãi không được lớn hơn giá sản phẩm!";
+                                }
+                              },
+                            })}
                               type="number"
                               id="GiaKhuyenMai"
                               name="GiaKhuyenMai"
                               placeholder="Nhập giá khuyến mãi sản phẩm..."
                               className="form-control"
                             />
+                            {errors.GiaKhuyenMai && (
+                              <span className="text-danger">{errors.GiaKhuyenMai.message}</span>
+                            )}
                           </div>
                         </div>
                         <div className="row form-group">

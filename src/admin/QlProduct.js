@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import Menu from "./layout/Menu";
-import img from "../asset/images/icon/thun1.webp";
+// import img from "../asset/images/icon/thun1.webp";
 import { fetchUnits, fetchDelete } from "../actions/unitActions";
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
@@ -107,7 +107,7 @@ function QlProduct() {
                               <tr key={item.MaSanPham}>
                                 <td>{indexOfFirstItem + index + 1}</td>
                                 <td>{item.TenSanPham}</td>
-                                <td><img src={img} alt="" style={{ width: '100px', height: '100px' }} /></td>
+                                <td><img src={"/assets/images/" + item.HinhAnh} alt={item.HinhAnh} style={{ width: '150px', height: '100px' }} /></td>
                                 <td>{formatCurrency(item.Gia)}</td>
                                 <td>{formatCurrency(item.GiaKhuyenMai)}</td>
                                 <td className="process">{item.SoLuong}</td>

@@ -2,6 +2,9 @@ const express = require("express");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const multer = require('multer');
+const path = require('path');
+
 const app = express();
 const port = 3001;
 app.use(cors());
@@ -15,6 +18,19 @@ const db = mysql.createConnection({
   password: "mysql", // Thay đổi nếu cần
   database: "asm_nodejs",
 });
+app.use(express.static('public'));
+
+// Định nghĩa nơi lưu trữ file
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/assets/images'); // Đường dẫn lưu tệp
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Đặt tên file với timestamp
+  }
+});
+
+const upload = multer({ storage: storage });
 
 app.get("/api/units", (req, res) => {
   const sql = "SELECT * FROM sanpham";
@@ -37,14 +53,29 @@ app.delete("/api/units/:MaSanPham", (req, res) => {
   });
 });
 
-app.post("/api/units", (req, res) => {
-  const { TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong } = req.body;
+// app.post("/api/units", upload.single('HinhAnh'), (req, res) => {
+//   const { TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong } = req.body;
+//   const HinhAnh = req.file.filename;
+//   console.log(HinhAnh);
+//   console.log('Received data:', req.body);
 
-  console.log('Received data:', req.body);
-
-  const sql = "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//   const sql = "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong, HinhAnh) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
   
-  db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong], (err, result) => {
+//   db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong, HinhAnh,], (err, result) => {
+//     if (err) {
+//       console.error('Database error:', err);
+//       return res.status(500).send(err);
+//     }
+//     return res.status(201).json({ message: "Thêm sản phẩm thành công!", data: result });
+//   });
+// });
+app.post("/api/units", upload.single('HinhAnh'), (req, res) => {
+  const { TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong } = req.body;
+  const HinhAnh = req.file.filename; // Lấy tên file từ `req.file`
+
+  const sql = "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong, HinhAnh) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+  db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong, HinhAnh], (err, result) => {
     if (err) {
       console.error('Database error:', err);
       return res.status(500).send(err);
@@ -52,6 +83,7 @@ app.post("/api/units", (req, res) => {
     return res.status(201).json({ message: "Thêm sản phẩm thành công!", data: result });
   });
 });
+
 
 app.get('/api/units/:MaSanPham', (req, res) => {
   const MaSanPham = req.params.MaSanPham;
@@ -68,19 +100,23 @@ app.get('/api/units/:MaSanPham', (req, res) => {
   });
 });
 
-
-
-app.put('/api/units/:MaSanPham', (req, res) => {
+app.put('/api/units/:MaSanPham', upload.single('HinhAnh'), (req, res) => {
   const MaSanPham = req.params.MaSanPham;
   const { TenSanPham, Gia, GiaKhuyenMai, SoLuong, MoTa, MaDanhMuc, TrangThai } = req.body;
-
+  // Xử lý hình ảnh
+  const HinhAnh = req.file ? req.file.filename : null; // Nếu không có file, `HinhAnh` là null
+  // Câu lệnh SQL để cập nhật sản phẩm
   const sql = `
     UPDATE sanpham
-    SET TenSanPham = ?, Gia = ?, GiaKhuyenMai = ?, SoLuong = ?, MoTa = ?, MaDanhMuc = ?, TrangThai = ?
+    SET TenSanPham = ?, Gia = ?, GiaKhuyenMai = ?, SoLuong = ?, MoTa = ?, MaDanhMuc = ?, TrangThai = ?${HinhAnh ? ', HinhAnh = ?' : ''}
     WHERE MaSanPham = ?
   `;
-
-  db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, SoLuong, MoTa, MaDanhMuc, TrangThai, MaSanPham], (err, results) => {
+  // Xây dựng mảng dữ liệu để truyền vào câu lệnh SQL
+  const values = [TenSanPham, Gia, GiaKhuyenMai, SoLuong, MoTa, MaDanhMuc, TrangThai];
+  if (HinhAnh) values.push(HinhAnh); // Nếu có hình ảnh mới, thêm vào mảng
+  values.push(MaSanPham);
+  
+  db.query(sql, values, (err, results) => {
     if (err) {
       return res.status(500).send(err);
     }
@@ -90,6 +126,27 @@ app.put('/api/units/:MaSanPham', (req, res) => {
     return res.json({ message: 'Product updated successfully' });
   });
 });
+
+// app.put('/api/units/:MaSanPham', (req, res) => {
+//   const MaSanPham = req.params.MaSanPham;
+//   const { TenSanPham, Gia, GiaKhuyenMai, SoLuong, MoTa, MaDanhMuc, TrangThai } = req.body;
+// const HinhAnh = req.file ? req.file.filename : null;
+//   const sql = `
+//     UPDATE sanpham
+//     SET TenSanPham = ?, Gia = ?, GiaKhuyenMai = ?, SoLuong = ?, MoTa = ?, MaDanhMuc = ?, TrangThai = ?,HinhAnh = ?
+//     WHERE MaSanPham = ?
+//   `;
+
+//   db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, SoLuong, MoTa, MaDanhMuc, TrangThai, MaSanPham,HinhAnh], (err, results) => {
+//     if (err) {
+//       return res.status(500).send(err);
+//     }
+//     if (results.affectedRows === 0) {
+//       return res.status(404).json({ message: 'Product not found' });
+//     }
+//     return res.json({ message: 'Product updated successfully' });
+//   });
+// });
 
 
 // app.post("/api/units", (req, res) => {
