@@ -46,7 +46,7 @@ function AddPersonnel() {
                       <strong>Form</strong> thêm nhân viên
                     </div>
                     <div className="card-body card-block">
-                      <form onSubmit={handleSubmit(onSubmit)} className="form-horizontal">
+                      <form onSubmit={handleSubmit(onSubmit)} className="form-horizontal" action="/uploadfile" enctype="multipart/form-data" method="POST">
                         <div className="row form-group">
                           <div className="col col-md-3">
                             <label htmlFor="HoTen" className="form-control-label">
@@ -77,7 +77,12 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("Email", { required: "Email Không được bỏ trống!" })}
+                              {...register("Email", { required: "Email Không được bỏ trống!",
+                                pattern: {
+                                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                  message: "Email không đúng định dạng!",
+                                },
+                               })}
                               type="email"
                               id="Email"
                               name="Email"
@@ -99,7 +104,18 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("MatKhau", { required: "Mật Khẩu Không được bỏ trống!" })}
+                              {...register("MatKhau", { required: "Mật Khẩu Không được bỏ trống!",
+                                minLength: {
+                                  value: 8,
+                                  message: "Mật Khẩu phải có ít nhất 8 kí tự!",
+                                },
+                                pattern: {
+                                  value:
+                                    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                  message:
+                                    "Mật Khẩu phải bao gồm chữ, số và ký tự đặc biệt!",
+                                },
+                               })}
                               type="password"
                               id="MatKhau"
                               name="MatKhau"
@@ -121,7 +137,18 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("SDT", { required: "Số Điện Thoại Không được bỏ trống!" })}
+                              {...register("SDT", { required: "Số Điện Thoại Không được bỏ trống!",
+                                maxLength: {
+                                  value: 10,
+                                  message:
+                                    "Số Điện Thoại không được quá 10 số!",
+                                },
+                                pattern: {
+                                  value: /^[0-9]+$/,
+                                  message:
+                                    "Số Điện Thoại chỉ được chứa chữ số!",
+                                },
+                               })}
                               type="text"
                               id="SDT"
                               name="SDT"
@@ -208,7 +235,7 @@ function AddPersonnel() {
                             <input
                               type="file"
                               id="file-input"
-                              name="file-input"
+                              name="myFile"
                               className="form-control-file"
                             />
                           </div>

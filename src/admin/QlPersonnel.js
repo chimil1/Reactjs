@@ -95,7 +95,6 @@ function QlPersonnel() {
                               <th>Email</th>
                               <th>Hình ảnh</th>
                               <th>SDT</th>
-                              <th>Mật Khẩu</th>
                               <th>Chức Vụ</th>
                               <th></th>
                             </tr>

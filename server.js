@@ -1,8 +1,8 @@
 const express = require("express");
 const mysql = require("mysql");
+const multer = require('multer');
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const multer = require('multer');
 const path = require('path');
 
 const app = express();
@@ -18,6 +18,7 @@ const db = mysql.createConnection({
   password: "mysql", // Thay đổi nếu cần
   database: "asm_nodejs",
 });
+
 app.use(express.static('public'));
 
 // Định nghĩa nơi lưu trữ file
@@ -53,22 +54,7 @@ app.delete("/api/units/:MaSanPham", (req, res) => {
   });
 });
 
-// app.post("/api/units", upload.single('HinhAnh'), (req, res) => {
-//   const { TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong } = req.body;
-//   const HinhAnh = req.file.filename;
-//   console.log(HinhAnh);
-//   console.log('Received data:', req.body);
 
-//   const sql = "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong, HinhAnh) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
-  
-//   db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong, HinhAnh,], (err, result) => {
-//     if (err) {
-//       console.error('Database error:', err);
-//       return res.status(500).send(err);
-//     }
-//     return res.status(201).json({ message: "Thêm sản phẩm thành công!", data: result });
-//   });
-// });
 app.post("/api/units", upload.single('HinhAnh'), (req, res) => {
   const { TenSanPham, Gia, GiaKhuyenMai, MoTa, TrangThai, MaDanhMuc, SoLuong } = req.body;
   const HinhAnh = req.file.filename; // Lấy tên file từ `req.file`
@@ -127,66 +113,7 @@ app.put('/api/units/:MaSanPham', upload.single('HinhAnh'), (req, res) => {
   });
 });
 
-// app.put('/api/units/:MaSanPham', (req, res) => {
-//   const MaSanPham = req.params.MaSanPham;
-//   const { TenSanPham, Gia, GiaKhuyenMai, SoLuong, MoTa, MaDanhMuc, TrangThai } = req.body;
-// const HinhAnh = req.file ? req.file.filename : null;
-//   const sql = `
-//     UPDATE sanpham
-//     SET TenSanPham = ?, Gia = ?, GiaKhuyenMai = ?, SoLuong = ?, MoTa = ?, MaDanhMuc = ?, TrangThai = ?,HinhAnh = ?
-//     WHERE MaSanPham = ?
-//   `;
 
-//   db.query(sql, [TenSanPham, Gia, GiaKhuyenMai, SoLuong, MoTa, MaDanhMuc, TrangThai, MaSanPham,HinhAnh], (err, results) => {
-//     if (err) {
-//       return res.status(500).send(err);
-//     }
-//     if (results.affectedRows === 0) {
-//       return res.status(404).json({ message: 'Product not found' });
-//     }
-//     return res.json({ message: 'Product updated successfully' });
-//   });
-// });
-
-
-// app.post("/api/units", (req, res) => {
-
-//   const {
-//     TenSanPham,
-//     Gia,
-//     GiaKhuyenMai,
-//     SoLuong,
-//     MoTa,
-//     MaDanhMuc,
-//     HinhAnh,
-//     TrangThai,
-//     Hot
-//   } = req.body;
-//   const sql =
-//     "INSERT INTO sanpham (TenSanPham, Gia, GiaKhuyenMai,SoLuong, MoTa, MaDanhMuc,HinhAnh, TrangThai,Hot) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
-//   db.query(
-//     sql,
-//     [
-//       TenSanPham,
-//       Gia,
-//       GiaKhuyenMai,
-//       SoLuong,
-//       MoTa,
-//       MaDanhMuc,
-//       HinhAnh,
-//       TrangThai,
-//       Hot
-//     ],
-//     (err, result) => {
-//       if (err) {
-//         return res.status(500).send(err);
-//       }
-//       return res
-//         .status(201)
-//         .json({ message: "Thêm sản phẩm thành công!", data: result });
-//     }
-//   );
-// });
 
 //nhân viên
 // hiển thị nhân viên
@@ -248,7 +175,15 @@ app.post("/api/employees", (req, res) => {
     }
   );
 });
-
+app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
+  const file = req.file
+  if (!file) {
+    const error = new Error('Please upload a file')
+    error.httpStatusCode = 400
+    return next(error)
+  }
+  res.send(file)
+})
 app.get('/api/employees/:MaNhanVien', (req, res) => {
   const MaNhanVien = req.params.MaNhanVien;
   const sql = 'SELECT * FROM nhanvien WHERE MaNhanVien = ?';
