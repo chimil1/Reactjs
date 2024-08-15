@@ -104,7 +104,18 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("MatKhau", { required: "Mật Khẩu Không được bỏ trống!" })}
+                              {...register("MatKhau", { required: "Mật Khẩu Không được bỏ trống!",
+                                minLength: {
+                                  value: 8,
+                                  message: "Mật Khẩu phải có ít nhất 8 kí tự!",
+                                },
+                                pattern: {
+                                  value:
+                                    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                  message:
+                                    "Mật Khẩu phải bao gồm chữ, số và ký tự đặc biệt!",
+                                },
+                               })}
                               type="password"
                               id="MatKhau"
                               name="MatKhau"
