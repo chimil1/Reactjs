@@ -77,7 +77,12 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("Email", { required: "Email Không được bỏ trống!" })}
+                              {...register("Email", { required: "Email Không được bỏ trống!",
+                                pattern: {
+                                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                  message: "Email không đúng định dạng!",
+                                },
+                               })}
                               type="email"
                               id="Email"
                               name="Email"
@@ -121,7 +126,18 @@ function AddPersonnel() {
                           </div>
                           <div className="col-12 col-md-9">
                             <input
-                              {...register("SDT", { required: "Số Điện Thoại Không được bỏ trống!" })}
+                              {...register("SDT", { required: "Số Điện Thoại Không được bỏ trống!",
+                                maxLength: {
+                                  value: 10,
+                                  message:
+                                    "Số Điện Thoại không được quá 10 số!",
+                                },
+                                pattern: {
+                                  value: /^[0-9]+$/,
+                                  message:
+                                    "Số Điện Thoại chỉ được chứa chữ số!",
+                                },
+                               })}
                               type="text"
                               id="SDT"
                               name="SDT"
